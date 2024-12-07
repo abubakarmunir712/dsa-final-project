@@ -1,36 +1,27 @@
 from datastructures.linkedlist import LinkedList
 
+# Stack
 class Stack:
-    
+    # Constructor
     def __init__(self):
-        self.stack = LinkedList()
+        self.__stack = LinkedList()
 
-    def push(self, card):
-        self.stack.insert_at_head(card)
-
+    # Push element
+    def push(self,data):
+        self.__stack.insert_at_head(data)
+    
+    # pop element
     def pop(self):
+        return self.__stack.remove_from_head()
 
-        if self.stack.is_empty():
-            return -1
-        
-        top = self.stack.view_first_node()
-        self.stack.remove_from_head()
-
-        return top
-
-    def is_empty(self):
-        return self.stack.is_empty()
-    
-
+    # Get size of the stack
     def get_size(self):
-        return self.stack.size()
-    
+        return self.__stack.get_size()
 
-    def peek(self):
+    # Getting the first card, the head of stack
+    def get_top(self):
+        return self.__stack.view_first_node()
 
-        if self.stack.is_empty():
-            return -1
-        return self.stack.view_first_node()
-
-
-    
+    # Check if the queue is empty
+    def is_empty(self):
+        return self.__stack.is_empty()
