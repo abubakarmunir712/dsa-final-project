@@ -11,7 +11,7 @@ class LinkedList:
 
     #linklist basic funstions
 
-    def insertAtHead(self, card):
+    def insert_at_head(self, card):
 
         node = Node(card)
 
@@ -22,7 +22,7 @@ class LinkedList:
             node.next = self.head
             self.head = node
 
-    def insertAtTail(self, card):
+    def insert_at_tail(self, card):
 
         node = Node(card)
 
@@ -37,7 +37,7 @@ class LinkedList:
 
         temp.next = node
 
-    def removeHead(self):
+    def remove_from_head(self):
         
         if self.head == None:
             return
@@ -74,14 +74,14 @@ class LinkedList:
         else:
             return 0
 
-    def getFirstCard(self):
+    def view_first_node(self):
 
         if self.head:
             return self.head.card
         else:
             return None
         
-    def getLastCard(self):
+    def view_last_node(self):
             
         if self.head:
             temp = self.head
@@ -91,8 +91,20 @@ class LinkedList:
         else:
             return None
         
-    def isEmpty(self):
+    def is_empty(self):
         if self.head == None:
             return True
         else:
             return False
+    def get_at_index(self, index):
+        if self.head:
+            temp = self.head
+            for i in range(index):
+                if temp.next:
+                    temp = temp.next
+                else:
+                    return None
+            return temp.card
+        else:
+            return None
+        
