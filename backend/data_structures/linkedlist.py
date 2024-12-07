@@ -6,6 +6,7 @@ class Node:
         self.prev = None
         self.next = None
 
+
 # LinkedList
 class LinkedList:
     # Constructor
@@ -116,7 +117,7 @@ class LinkedList:
         else:
             return None
 
-    # Viewing the last element  
+    # Viewing the last element
     def view_last_node(self):
         if self.__tail:
             return self.__tail
@@ -133,4 +134,3 @@ class LinkedList:
     # Get the size of the linkedlist
     def get_size(self):
         return self.__size
-    

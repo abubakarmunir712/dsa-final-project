@@ -1,4 +1,5 @@
-from datastructures.linkedlist import LinkedList
+from data_structures.linkedlist import LinkedList
+
 
 # Stack
 class Stack:
@@ -7,9 +8,9 @@ class Stack:
         self.__stack = LinkedList()
 
     # Push element
-    def push(self,data):
+    def push(self, data):
         self.__stack.insert_at_head(data)
-    
+
     # pop element
     def pop(self):
         return self.__stack.remove_from_head()

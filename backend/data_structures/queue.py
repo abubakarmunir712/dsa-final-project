@@ -1,4 +1,5 @@
-from datastructures.linkedlist import LinkedList
+from data_structures.linkedlist import LinkedList
+
 
 # Queue
 class Queue:
@@ -7,9 +8,9 @@ class Queue:
         self.__queue = LinkedList()
 
     # Enqueue element
-    def enqueue(self,data):
+    def enqueue(self, data):
         self.__queue.insert_at_tail(data)
-    
+
     # Dequeue element
     def dequeue(self):
         return self.__queue.remove_from_head()
