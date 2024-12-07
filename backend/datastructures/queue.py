@@ -1,4 +1,4 @@
-from backend.datastructures.linklist import LinkedList
+from datastructures.linkedlist import LinkedList
 
 class Queue:
     

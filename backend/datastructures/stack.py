@@ -1,15 +1,12 @@
-from backend.datastructures.linklist import LinkedList
+from datastructures.linkedlist import LinkedList
 
 class Stack:
     
     def __init__(self):
         self.stack = LinkedList()
 
-
     def push(self, card):
-
         self.stack.insert_at_head(card)
-
 
     def pop(self):
 
