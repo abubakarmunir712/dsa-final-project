@@ -6,24 +6,28 @@ class Queue:
     def __init__(self):
         self.queue = LinkedList()
 
+
     def enqueue(self, card):
-        self.queue.insertAtTail(card)
+        self.queue.insert_at_tail(card)
+
 
     def dequeue(self):
-        if self.queue.isEmpty():
+        if self.queue.is_empty():
             return -1
         
-        front = self.queue.getFirstCard()
-        self.queue.removeHead()
+        front = self.queue.view_first_node()
+        self.queue.remove_from_head()
         return front
 
     def peek(self):
-        if self.queue.isEmpty():
+        if self.queue.is_empty():
             return -1
-        return self.queue.getFirstCard()
+        return self.queue.view_first_node()
 
-    def isEmpty(self):
-        return self.queue.isEmpty()
 
-    def size(self):
+    def is_empty(self):
+        return self.queue.is_empty()
+
+
+    def get_size(self):
         return self.queue.size()
