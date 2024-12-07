@@ -5,31 +5,35 @@ class Stack:
     def __init__(self):
         self.stack = LinkedList()
 
+
     def push(self, card):
 
-        self.stack.insertAtHead(card)
+        self.stack.insert_at_head(card)
 
 
     def pop(self):
 
-        if self.stack.isEmpty():
+        if self.stack.is_empty():
             return -1
         
-        top = self.stack.getFirstCard()
-        self.stack.removeHead()
+        top = self.stack.view_first_node()
+        self.stack.remove_from_head()
 
         return top
 
-    def peek(self):
+    def is_empty(self):
+        return self.stack.is_empty()
+    
 
-        if self.stack.isEmpty():
-            return -1
-        return self.stack.getFirstCard()
-
-    def isEmpty(self):
-        return self.stack.isEmpty()
-
-    def size(self):
+    def get_size(self):
         return self.stack.size()
     
+
+    def peek(self):
+
+        if self.stack.is_empty():
+            return -1
+        return self.stack.view_first_node()
+
+
     
