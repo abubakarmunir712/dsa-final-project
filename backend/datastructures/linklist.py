@@ -1,30 +1,25 @@
-
 class Node:
-    def __init__(self, card):  #constructor
-        self.card = card
+    def __init__(self, data):
+        self.data = data
         self.next = None
 
 class LinkedList:
-
-    def __init__(self):  #constructor
+    def __init__(self):
         self.head = None
 
-    #linklist basic funstions
-
-    def insert_at_head(self, card):
-
-        node = Node(card)
+    def insert_at_head(self, data):
+        node = Node(data)
 
         if self.head == None:
             self.head = node
             return
-        else:      
+        else:
             node.next = self.head
             self.head = node
 
-    def insert_at_tail(self, card):
+    def insert_at_tail(self, data):
 
-        node = Node(card)
+        node = Node(data)
 
         if self.head == None:
             self.head = node
@@ -77,7 +72,7 @@ class LinkedList:
     def view_first_node(self):
 
         if self.head:
-            return self.head.card
+            return self.head.data
         else:
             return None
         
@@ -87,7 +82,7 @@ class LinkedList:
             temp = self.head
             while temp.next:
                 temp = temp.next
-            return temp.card
+            return temp.data
         else:
             return None
         
@@ -96,6 +91,7 @@ class LinkedList:
             return True
         else:
             return False
+        
     def get_at_index(self, index):
         if self.head:
             temp = self.head
@@ -104,7 +100,6 @@ class LinkedList:
                     temp = temp.next
                 else:
                     return None
-            return temp.card
+            return temp.data
         else:
             return None
-        

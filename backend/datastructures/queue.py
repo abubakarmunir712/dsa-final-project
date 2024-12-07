@@ -1,6 +1,5 @@
 from backend.datastructures.linklist import LinkedList
 
-
 class Queue:
     
     def __init__(self):
@@ -10,12 +9,12 @@ class Queue:
     def enqueue(self, card):
         self.queue.insert_at_tail(card)
 
-
     def dequeue(self):
         if self.queue.is_empty():
             return -1
         
         front = self.queue.view_first_node()
+
         self.queue.remove_from_head()
         return front
 

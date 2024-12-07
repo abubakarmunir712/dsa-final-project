@@ -1,40 +1,36 @@
 class Card:
-
-    def __init__(self, suit, rank,color):   #constructor 
+    def __init__(self, suit, rank,color):
         self.suit = suit
         self.rank = rank
         self.color = color
-        self.CardName = suit + "_" +rank
+        self.card_name = suit + "_" +rank
         self.visible = False
-        self.Joker = False
+        self.joker = False
 
-
-    #Basic functions for thecard Classs
-
-    def getCardName(self):
-        return self.CardName
+    def get_card_name(self):
+        return self.card_name
     
-    def getSuit(self):
+    def get_suit(self):
         return self.suit
     
-    def isVisible(self):
+    def is_visible(self):
         return self.visible
     
-    def isJoker(self):
+    def is_joker(self):
         return self.isJoker
     
-    def makeJoker(self):
+    def make_joker(self):
         self.isJoker = True
 
-    def isRed(self):
+    def is_red(self):
         return self.color == "red"
     
-    def isBlack(self):
+    def is_black(self):
         return self.color == "black"
     
-    def GetPoints(self):
+    def get_points(self):
         if self.rank =="A":
-            return 10
+            return 20
         elif self.rank == "2":
             return 2
         elif self.rank == "3":
@@ -60,7 +56,7 @@ class Card:
         elif self.rank == "K":
             return 10
     
-    def getRank(self):
+    def get_rank(self):
         if self.rank =="A":
             return 1
         elif self.rank == "2":
