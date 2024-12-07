@@ -1,3 +1,1 @@
-from gamelogic.game import game
-
-a=game()
+from game_logic.game import game
