@@ -1,3 +1,4 @@
+# Hashmap
 class HashMap:
     # Constructor
     def __init__(self, size):

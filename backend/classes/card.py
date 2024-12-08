@@ -26,6 +26,7 @@ class Rank(Enum):
     KING = "K"
 
 
+# Card
 class Card:
     def __init__(self, suit, rank, is_joker=False):
         # Ensure is_joker is set to true when both suit and rank are none
@@ -98,9 +99,3 @@ class Card:
             return 0  # In case of printed joker
         else:
             return int(self.rank)
-
-
-card = Card(None, None, True)
-print(card.is_joker())
-print(card.get_points())
-print(card.get_rank())
