@@ -86,9 +86,10 @@ class Card:
             return 10
         else:
             return int(self.rank)
+
     def toggle_ace_rank(self):
-        if self.rank=="A":
-            self.rank="A+"
+        if self.rank == "A":
+            self.rank = "A+"
             return True
         elif self.rank == "A+":
             self.rank = "A"

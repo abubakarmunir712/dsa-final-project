@@ -1,6 +1,3 @@
-from card import Card
-
-
 # Sequence
 class Sequence:
     def __init__(self, cards=None, first_life=False, second_life=False):
@@ -42,7 +39,7 @@ class Sequence:
 
         # If second life does not exist
         if not second_life and first_life:
-            if self.is_second_life():
+            if self.is_impure_sequence():
                 self.__sequence = "Second life"
                 return
 
@@ -53,6 +50,9 @@ class Sequence:
 
     # Checking pure sequence (Checks first life because first life is a pure sequence)
     def is_pure_sequence(self):
+        if not self.check_ace_rank_validity():
+            False
+
         for i in range(len(self.__cards) - 1):
             if not self.check_suit_rank(self.__cards[i], self.__cards[i + 1]):
                 return False
@@ -61,19 +61,36 @@ class Sequence:
 
         return True
 
+
     # Checking second life (Second life can also be an impure sequence so checking the suit and rank only)
-    def is_second_life(self):
+    def is_impure_sequence(self):
+        if not self.check_ace_rank_validity():
+            False
+        
         for i in range(len(self.__cards) - 1):
             if not self.check_suit_rank(self.__cards[i], self.__cards[i + 1]):
                 return False
 
         return True
 
+    # Checks the ace validity such that the ace can be used as 1 or 14 for different conditions
+    def check_ace_rank_validity(self):
+        if self.__cards[0].get_rank() == 1 and self.__cards[1].get_rank() == 2 and self.__cards[len(self.__cards)-1].get_rank() == 13:
+            return False
+        
+        if self.__cards[0].get_rank() == 1 and self.__cards[len(self.__cards)-1].get_rank() == 13:
+            self.__cards[0].toggle_ace_rank()
+            self.__cards = self.bubble_sort(self.__cards)
+        
+        if self.__cards[0].get_rank() == 2 and self.__cards[len(self.__cards)-1].get_rank() == 14:
+            self.__cards[len(self.__cards)-1].toggle_ace_rank()
+            self.__cards = self.bubble_sort(self.__cards)
+        
+        return True
+
     # Checking if the suit and rank are valid for pure sequence
     def check_suit_rank(self, card1, card2):
         if not card1.get_suit() == card2.get_suit():
-            return False
-        if card1.get_rank() == card2.get_rank() - 1:
             return False
         if not card1.get_rank() == card2.get_rank() - 1:
             return False
@@ -86,17 +103,3 @@ class Sequence:
 
     def get_cards(self):
         return self.__cards
-
-
-a = Sequence([Card("Hearts", "A"), Card("Hearts", "2"), Card("Hearts", "3")])
-print(a.get_sequence())
-a = Sequence([Card("Spades", "A"), Card("Hearts", "2"), Card("Hearts", "3")])
-print(a.get_sequence())
-a = Sequence([Card("Hearts", "A"), Card("Hearts", "2"), Card("Hearts", "4")])
-print(a.get_sequence())
-a = Sequence([Card("Hearts", "K"), Card("Hearts", "2"), Card("Hearts", "3")])
-print(a.get_sequence())
-a = Sequence([Card(None, None, True), Card("Hearts", "2"), Card("Hearts", "3")])
-print(a.get_sequence())
-a = Sequence([Card("Hearts", "K"), Card("Hearts", "A"), Card("Hearts", "Q")])
-print(a.get_sequence())
