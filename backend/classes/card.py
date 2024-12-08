@@ -1,5 +1,5 @@
-from backend.enums.rank_enum import Rank
-from backend.enums.suit_enum import Suit
+from enums.rank_enum import Rank
+from enums.suit_enum import Suit
 
 
 # Card

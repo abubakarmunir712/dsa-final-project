@@ -1,6 +1,7 @@
 from classes.sequence import Sequence
 from typing import List
 from classes.card import Card
+from enums.status_enum import Status
 
 
 # Player
@@ -9,13 +10,13 @@ class Player:
     # Constructor
     def __init__(self, cards: List[Card], name="Unknown", is_AI=False, game_id=None):
         self.__hand = [None] * 5
-        self.populate_sequences(cards)
         self.__name = name
         self.__points = 0
         self.__is_AI = is_AI
         self.__game_id = game_id
-        self.__has_first_life = False
-        self.__has_second_life = False
+        self.has_first_life = False
+        self.has_second_life = False
+        self.populate_sequences(cards)
 
     # Getters for attributes
     def get_name(self):
@@ -56,4 +57,21 @@ class Player:
 
         suits_array = [self.hearts, self.spades, self.diamonds, self.clubs, self.joker]
         for i in range(5):
-            self.__hand[i] = Sequence(suits_array[i])
+
+            print(f"------------{i+1}-------------")
+            print(self.has_first_life, self.has_second_life)
+
+            self.__hand[i] = Sequence(
+                suits_array[i], self.has_first_life, self.has_second_life
+            )
+
+            self.check_sequence_status()
+
+    # Check if player has first life and second life
+    def check_sequence_status(self):
+        for i in range(5):
+            if self.__hand[i] != None:
+                if self.__hand[i].get_sequence_status() == Status.FIRST_LIFE.value:
+                    self.has_first_life = True
+                elif self.__hand[i].get_sequence_status() == Status.SECOND_LIFE.value:
+                    self.has_second_life = True

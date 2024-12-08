@@ -1,5 +1,5 @@
-from backend.utility.utilities import bubble_sort
-from backend.enums.status_enum import Status
+from utility.utilities import bubble_sort
+from enums.status_enum import Status
 
 
 # Sequence
@@ -82,14 +82,14 @@ class Sequence:
             and self.__cards[len(self.__cards) - 1].get_rank() == 13
         ):
             self.__cards[0].toggle_ace_rank()
-            self.__cards = self.bubble_sort(self.__cards)
+            self.__cards = bubble_sort(self.__cards)
 
         if (
             self.__cards[0].get_rank() == 2
             and self.__cards[len(self.__cards) - 1].get_rank() == 14
         ):
             self.__cards[len(self.__cards) - 1].toggle_ace_rank()
-            self.__cards = self.bubble_sort(self.__cards)
+            self.__cards = bubble_sort(self.__cards)
 
         return True
 
@@ -103,8 +103,10 @@ class Sequence:
         return True
 
     # Getters for attributes
-    def get_sequence(self):
-        return self.__sequence_status
+    def get_sequence_status(self):
+        if self.__sequence_status == None:
+            return None
+        return self.__sequence_status.value
 
     def get_cards(self):
         return self.__cards
