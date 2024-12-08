@@ -14,6 +14,8 @@ class Player:
         self.__points = 0
         self.__is_AI = is_AI
         self.__game_id = game_id
+        self.__has_first_life = False
+        self.__has_second_life = False
 
     # Getters for attributes
     def get_name(self):
@@ -31,7 +33,9 @@ class Player:
     def get_game_id(self):
         return self.__game_id
 
+    # Populate hand of player
     def populate_sequences(self, cards: List[Card]):
+        # Seperate cards of same suit
         self.hearts = []
         self.spades = []
         self.diamonds = []
