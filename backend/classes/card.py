@@ -80,7 +80,7 @@ class Card:
     def get_points(self):
         if self.joker:
             return 0
-        elif self.rank == "A":
+        elif self.rank == "A" or self.rank == "A+":
             return 20
         elif self.rank == "K" or self.rank == "Q" or self.rank == "J":
             return 10
