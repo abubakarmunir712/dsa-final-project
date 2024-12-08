@@ -12,6 +12,7 @@ class Suit(Enum):
 # Possible rank values
 class Rank(Enum):
     ACE = "A"
+    ACEP = "A+"
     TWO = "2"
     THREE = "3"
     FOUR = "4"
@@ -85,10 +86,21 @@ class Card:
             return 10
         else:
             return int(self.rank)
+    def toggle_ace_rank(self):
+        if self.rank=="A":
+            self.rank="A+"
+            return True
+        elif self.rank == "A+":
+            self.rank = "A"
+            return True
+        else:
+            return False
 
     def get_rank(self):
         if self.rank == "A":
             return 1
+        elif self.rank == "A+":
+            return 14
         elif self.rank == "J":
             return 11
         elif self.rank == "Q":
