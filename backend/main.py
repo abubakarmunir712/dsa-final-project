@@ -1,1 +1,1 @@
-from game_logic.game import game
+from game_logic.game import Game
