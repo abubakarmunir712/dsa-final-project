@@ -50,9 +50,9 @@ class Sequence:
             False
 
         for i in range(len(self.__cards) - 1):
-            if not self.check_suit_rank(self.__cards[i], self.__cards[i + 1]):
+            if (self.__cards[i].get_rank() == 0 or self.__cards[i + 1].get_rank() == 0):
                 return False
-            if self.__cards[i].is_joker() or self.__cards[i + 1].is_joker():
+            if not self.check_suit_rank(self.__cards[i], self.__cards[i + 1]):
                 return False
 
         return True
