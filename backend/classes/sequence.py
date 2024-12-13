@@ -4,7 +4,7 @@ from enums.status_enum import Status
 
 # Sequence
 class Sequence:
-    def __init__(self, cards=None, first_life=False, second_life=False):
+    def _init_(self, cards=None, first_life=False, second_life=False):
         self.__cards = cards
         self.__sequence_status = None
         self.calculate_sequence(first_life, second_life)
@@ -25,7 +25,7 @@ class Sequence:
         self.__sequence_status = Status.INVALID
 
         # Sorting the cards for easy comparison
-        self.__cards = bubble_sort(self.__cards)
+        self._cards = bubble_sort(self._cards)
 
         # If first life does not exist
         if not first_life:
@@ -50,9 +50,9 @@ class Sequence:
             False
 
         for i in range(len(self.__cards) - 1):
-            if not self.check_suit_rank(self.__cards[i], self.__cards[i + 1]):
+            if not self.check_suit_rank(self._cards[i], self._cards[i + 1]):
                 return False
-            if self.__cards[i].is_joker() or self.__cards[i + 1].is_joker():
+            if self._cards[i].is_joker() or self._cards[i + 1].is_joker():
                 return False
 
         return True
@@ -63,7 +63,7 @@ class Sequence:
             False
 
         for i in range(len(self.__cards) - 1):
-            if not self.check_suit_rank(self.__cards[i], self.__cards[i + 1]):
+            if not self.check_suit_rank(self._cards[i], self._cards[i + 1]):
                 return False
 
         return True
@@ -73,23 +73,23 @@ class Sequence:
         if (
             self.__cards[0].get_rank() == 1
             and self.__cards[1].get_rank() == 2
-            and self.__cards[len(self.__cards) - 1].get_rank() == 13
+            and self._cards[len(self._cards) - 1].get_rank() == 13
         ):
             return False
 
         if (
             self.__cards[0].get_rank() == 1
-            and self.__cards[len(self.__cards) - 1].get_rank() == 13
+            and self._cards[len(self._cards) - 1].get_rank() == 13
         ):
             self.__cards[0].toggle_ace_rank()
-            self.__cards = bubble_sort(self.__cards)
+            self._cards = bubble_sort(self._cards)
 
         if (
             self.__cards[0].get_rank() == 2
-            and self.__cards[len(self.__cards) - 1].get_rank() == 14
+            and self._cards[len(self._cards) - 1].get_rank() == 14
         ):
-            self.__cards[len(self.__cards) - 1].toggle_ace_rank()
-            self.__cards = bubble_sort(self.__cards)
+            self._cards[len(self._cards) - 1].toggle_ace_rank()
+            self._cards = bubble_sort(self._cards)
 
         return True
 
