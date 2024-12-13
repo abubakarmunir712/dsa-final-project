@@ -9,4 +9,4 @@ class Status(Enum):
     PURE_SEQUENCE = "pure_sequence"
     IMPURE_SEQUENCE = "impure_sequence"
     FIRST_LIFE_REQUIRED = "first_life_required"
-    SECOND_LIFE_REQUIRED = "second_life_requred"
+    SECOND_LIFE_REQUIRED = "second_life_required"
