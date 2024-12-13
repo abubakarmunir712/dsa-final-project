@@ -118,6 +118,7 @@ class Sequence:
                 return False
         return True
 
+    # Calculate
     def calculate_rank_difference(self, cards: List[Card]):
         cards = bubble_sort(cards)
         self.rank_difference = 0
@@ -138,6 +139,7 @@ class Sequence:
                 return -1
         return self.rank_difference
 
+    # Toggle ace value
     def toggle_ace_rank_value(self, checking_for_pure_sequence):
         self.max_rank = find_max_rank(self.__cards, checking_for_pure_sequence)
         self.min_rank = find_min_rank(self.__cards, checking_for_pure_sequence)
@@ -164,6 +166,7 @@ class Sequence:
     def get_cards(self):
         return self.__cards
 
+    # Get all jokers in set
     def get_jokers(self):
         self.wild_jokers = [
             index
@@ -176,6 +179,7 @@ class Sequence:
 
         return (self.printed_jokers, self.wild_jokers)
 
+    # Get total points of sequence
     def get_points(self) -> int:
         if (
             self.__sequence_status == Status.FIRST_LIFE
@@ -189,3 +193,22 @@ class Sequence:
             for card in self.__cards:
                 self.total_points += card.get_points()
             return self.total_points
+
+    def get_number_of_cards(self):
+        return len(self.__cards)
+
+    # Remove a card from sequence
+    def remove_card_from_sequence(self, card_name) -> Card:
+        self.index = None
+        for i in range (len(self.__cards)):
+            if self.__cards[i].card_name == card_name:
+                self.index = i
+                break
+        if self.index is not None:
+            return self.__cards.pop(self.index)
+        return None
+
+    # Insert a card into sequence
+    def insert_card_into_sequence(self, card):
+        self.__cards.append(card)
+        return True
