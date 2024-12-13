@@ -2,18 +2,20 @@ from classes.sequence import Sequence
 from typing import List
 from classes.card import Card
 from enums.status_enum import Status
+from classes.stockpile import StockPile
+from classes.wastepile import WastePile
 
 
 # Player
 class Player:
 
     # Constructor
-    def __init__(self, cards: List[Card], name="Unknown", is_AI=False, game_id=None):
+    def __init__(self, cards: List[Card], name="Unknown", is_AI=False, player_id=None):
         self.__hand = [None] * 5
         self.__name = name
         self.__points = 0
         self.__is_AI = is_AI
-        self.__game_id = game_id
+        self.__player_id = player_id
         self.has_first_life = False
         self.has_second_life = False
         self.populate_sequences(cards)
@@ -60,23 +62,40 @@ class Player:
             self.__hand[i] = Sequence(
                 suits_array[i], self.has_first_life, self.has_second_life
             )
+        self.check_sequence_status()
 
     # Check if player has first life and second life
     def check_sequence_status(self):
-        for i in range(5):
-            if self.__hand[i] != None:
-                if self.__hand[i].get_sequence_status() == Status.FIRST_LIFE.value:
-                    self.has_first_life = True
-                elif self.__hand[i].get_sequence_status() == Status.SECOND_LIFE.value:
-                    self.has_second_life = True
+        self.has_first_life = False
+        self.has_second_life = False
+        self.first_life_index = -1
+        self.second_life_index = -1
+        for i in range(3):
+            for i in range(5):
+                if i == self.first_life_index or i == self.second_life_index:
+                    continue
+                if self.__hand[i] != None:
+                    # Check if sequence is first life
+                    if (
+                        self.__hand[i].check_status(
+                            self.has_first_life, self.has_second_life
+                        )
+                        == Status.FIRST_LIFE
+                    ):
+                        self.has_first_life = True
+                        self.first_life_index = i
 
-    def play(self):
-        if self.__is_AI:
-            pass
-        else:
-            pass
+                    # Check if sequence is second life
+                    elif (
+                        self.__hand[i].check_status(
+                            self.has_first_life, self.has_second_life
+                        )
+                        == Status.SECOND_LIFE
+                    ):
+                        self.has_second_life = True
+                        self.second_life_index = i
 
-    def move_card(self, sequence_number_1, sequence_number_2, card_name):
+    def move_card(self, sequence_number_1, sequence_number_2, card_name) -> bool:
         # Sequence no 1 represent seq from where card is being removed
         # Sequence no 2 represent seq from where card is being added
         if (
@@ -86,26 +105,22 @@ class Player:
             or sequence_number_2 > 4
         ):
             return False
-        card = self.__hand[sequence_number_1].remove_card_from_sequence(card_name)
-        if (
-            card is not None
-            and self.__hand[sequence_number_2].get_number_of_cards() != 0
-        ):
-            self.__hand[sequence_number_2].insert_card_into_sequence(card)
+        self.card = self.__hand[sequence_number_1].remove_card_from_sequence(card_name)
+        if self.card is not None:
+            self.__hand[sequence_number_2].insert_card_into_sequence(self.card)
+            self.check_sequence_status()
             return True
         return False
 
     # Make a group of cards
-    def group_cards(self, cards_list):
+    def group_cards(self, cards_list) -> bool:
         # Format of card_list = list of tuples in this format (sequence_number, "card_name")
         self.cards_list = []
         for card in cards_list:
             if card[0] < 5 and card[0] >= 0:
-                card = self.__hand[card[0]].remove_card_from_sequence(card[1])
-                if card is not None:
-                    self.cards_list.append(card)
-                else:
-                    return False
+                self.card = self.__hand[card[0]].remove_card_from_sequence(card[1])
+                if self.card is not None:
+                    self.cards_list.append(self.card)
             else:
                 return False
 
@@ -115,10 +130,27 @@ class Player:
                 self.__hand[i] = Sequence(
                     self.cards_list, self.has_first_life, self.has_second_life
                 )
+                self.check_sequence_status()
                 return True
 
         # If no sequence is empty append it to last sequence
-        self.__hand[4] = Sequence(
-            self.cards_list, self.has_first_life, self.has_second_life
-        )
+        for card in self.cards_list:
+            self.__hand[4].insert_card_into_sequence(card)
+        self.check_sequence_status()
         return True
+
+    # Getting card from waste pile
+    def get_card_from_wastepile(self, pile: WastePile) -> bool:
+        self.card = pile.get_card()
+        if self.card is None:
+            return False
+        self.__hand[4].insert_card_into_sequence(self.card)
+        return True
+
+    # Get card from stock pile
+    def get_card_from_stockpile(self, pile: StockPile) -> bool:
+        self.card = pile.get_card()
+        if self.card is not None:
+            self.__hand[4].insert_card_into_sequence(self.card)
+            return True
+        return False

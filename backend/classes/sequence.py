@@ -68,6 +68,7 @@ class Sequence:
                 self.__sequence_status = Status.SET
             else:
                 self.__sequence_status = Status.INVALID
+        return self.__sequence_status
 
     # Check if a sequence is pure sequence
     def is_pure_sequence(self) -> bool:
