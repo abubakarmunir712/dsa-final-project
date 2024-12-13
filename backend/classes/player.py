@@ -33,8 +33,8 @@ class Player:
     def get_is_AI(self):
         return self.__is_AI
 
-    def get_game_id(self):
-        return self.__game_id
+    def get_player_id(self):
+        return self.__player_id
 
     # Populate hand of player
     def populate_sequences(self, cards: List[Card]):
@@ -145,6 +145,7 @@ class Player:
         if self.card is None:
             return False
         self.__hand[4].insert_card_into_sequence(self.card)
+        self.check_sequence_status()
         return True
 
     # Get card from stock pile
@@ -152,5 +153,6 @@ class Player:
         self.card = pile.get_card()
         if self.card is not None:
             self.__hand[4].insert_card_into_sequence(self.card)
+            self.check_sequence_status()
             return True
         return False
