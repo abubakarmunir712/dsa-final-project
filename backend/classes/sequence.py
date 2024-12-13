@@ -1,106 +1,151 @@
-from utility.utilities import bubble_sort
+from utility.utilities import bubble_sort, find_max_rank, find_min_rank
 from enums.status_enum import Status
+from classes.card import Card
+from typing import List, Optional
+from data_structures.hashmap import HashMap
 
 
 # Sequence
 class Sequence:
-    def _init_(self, cards=None, first_life=False, second_life=False):
+    def _init_(
+        self, cards: Optional[List[Card]] = None, first_life=False, second_life=False
+    ):
         self.__cards = cards
         self.__sequence_status = None
-        self.calculate_sequence(first_life, second_life)
+        self.check_status(first_life, second_life)
 
-    # Calculating the sequence type of the cards
-    def calculate_sequence(self, first_life, second_life):
+    # Check the status of the sequence
+    def check_status(self, first_life, second_life):
         # If the sequence is empty
         if len(self.__cards) == 0:
             self.__sequence_status == None
             return
+
 
         # If the sequence has less than 3 cards
         if len(self.__cards) < 3:
             self.__sequence_status = Status.INVALID
             return
 
-        # In start sequence is invalid
-        self.__sequence_status = Status.INVALID
-
-        # Sorting the cards for easy comparison
+        # Sort cards according to their rank
         self._cards = bubble_sort(self._cards)
 
-        # If first life does not exist
-        if not first_life:
-            if self.is_pure_sequence():
+        # Get all jokers (both printed and wild jokers)
+        self.wild_jokers = [
+            index
+            for index, card in enumerate(self.__cards)
+            if (card.is_joker() and card.get_rank != 0)
+        ]
+        self.printed_jokers = [
+            index for index, card in enumerate(self.__cards) if card.get_rank() == 0
+        ]
+
+        self.jokers = (self.printed_jokers, self.wild_jokers)
+
+        if not first_life and not second_life:
+            if self.is_pure_sequence(self.jokers):
                 self.__sequence_status = Status.FIRST_LIFE
-                return
+            elif self.is_impure_sequence(self.jokers):
+                self.__sequence_status = Status.FIRST_LIFE_REQUIRED
+            elif self.is_set(self.jokers):
+                self.__sequence_status = Status.SECOND_LIFE_REQUIRED
+            else:
+                self.__sequence_status = Status.INVALID
 
-        # If second life does not exist
-        if not second_life and first_life:
-            if self.is_impure_sequence():
+        elif first_life and not second_life:
+            if self.is_pure_sequence(self.jokers):
                 self.__sequence_status = Status.SECOND_LIFE
-                return
+            elif self.is_impure_sequence(self.jokers):
+                self.__sequence_status = Status.SECOND_LIFE
+            elif self.is_set(self.jokers):
+                self.__sequence_status = Status.SECOND_LIFE_REQUIRED
+            else:
+                self.__sequence_status = Status.INVALID
+        elif first_life and second_life:
+            if self.is_pure_sequence(self.jokers):
+                self.__sequence_status = Status.PURE_SEQUENCE
+            elif self.is_impure_sequence(self.jokers):
+                self.__sequence_status = Status.IMPURE_SEQUENCE
+            elif self.is_set(self.jokers):
+                self.__sequence_status = Status.SET
+            else:
+                self.__sequence_status = Status.INVALID
 
-        # If first and second life already exists then check for the pure sequence
-        if self.is_pure_sequence():
-            self.__sequence_status = Status.PURE_SEQUENCE
-            return
+    # Check if a sequence is pure sequence
+    def is_pure_sequence(self, jokers) -> bool:
+        self.toggle_ace_rank_value(True)
+        # If sequence contains printed jokers it can't be pure
+        if len(jokers[0]) != 0 or self.calculate_rank_difference(self.__cards) != 0:
+            return False
+        else:
+            return True
 
-    # Checking pure sequence (Checks first life because first life is a pure sequence)
-    def is_pure_sequence(self):
-        if not self.check_ace_rank_validity():
-            False
-
-        for i in range(len(self.__cards) - 1):
-            if not self.check_suit_rank(self._cards[i], self._cards[i + 1]):
-                return False
-            if self._cards[i].is_joker() or self._cards[i + 1].is_joker():
-                return False
-
-        return True
-
-    # Checking second life (Second life can also be an impure sequence so checking the suit and rank only)
-    def is_impure_sequence(self):
-        if not self.check_ace_rank_validity():
-            False
-
-        for i in range(len(self.__cards) - 1):
-            if not self.check_suit_rank(self._cards[i], self._cards[i + 1]):
-                return False
-
-        return True
-
-    # Checks the ace validity such that the ace can be used as 1 or 14 for different conditions
-    def check_ace_rank_validity(self):
-        if (
-            self.__cards[0].get_rank() == 1
-            and self.__cards[1].get_rank() == 2
-            and self._cards[len(self._cards) - 1].get_rank() == 13
-        ):
+    # Check if a sequence is impure sequence
+    def is_impure_sequence(self, jokers) -> bool:
+        self.toggle_ace_rank_value(False)
+        self.total_jokers = len(jokers[0]) + len(jokers[1])
+        self.cards_without_jokers = [
+            cards
+            for index, cards in enumerate(self.__cards)
+            if index not in jokers[0] and index not in jokers[1]
+        ]
+        self.rank_difference = self.calculate_rank_difference(self.cards_without_jokers)
+        if self.rank_difference != -1 and self.total_jokers >= self.rank_difference:
+            return True
+        else:
             return False
 
-        if (
-            self.__cards[0].get_rank() == 1
-            and self._cards[len(self._cards) - 1].get_rank() == 13
-        ):
-            self.__cards[0].toggle_ace_rank()
-            self._cards = bubble_sort(self._cards)
-
-        if (
-            self.__cards[0].get_rank() == 2
-            and self._cards[len(self._cards) - 1].get_rank() == 14
-        ):
-            self._cards[len(self._cards) - 1].toggle_ace_rank()
-            self._cards = bubble_sort(self._cards)
-
+    # Check if sequence is a set
+    def is_set(self, jokers):
+        # Set can contain at most 4 cards otherwise suit will start repeating
+        if len(self.__cards) > 4:
+            return False
+        self.rank = self.__cards[0].rank[:1]
+        self.suit = HashMap(10)
+        for index, card in enumerate(self.__cards):
+            if index in jokers[0] or index in jokers[1]:
+                continue
+            if card.rank[:1] == self.rank:
+                if self.suit.get(card.get_suit()) == True:
+                    return False
+                else:
+                    self.suit.insert(card.get_suit())
+            else:
+                return False
         return True
 
-    # Checking if the suit and rank are valid for pure sequence
-    def check_suit_rank(self, card1, card2):
-        if not card1.get_suit() == card2.get_suit():
-            return False
-        if not card1.get_rank() == card2.get_rank() - 1:
-            return False
+    def calculate_rank_difference(self, cards: List[Card]):
+        cards = bubble_sort(cards)
+        self.rank_difference = 0
+        self.suit = cards[0].get_suit()
+        # Create hashmap to check if 
+        self.rank = HashMap(10)
+        self.rank.insert(cards[0].card_name)
+        for i in range(1, len(cards)):
+            if (
+                cards[i].get_suit() == self.suit
+                and self.rank.get(cards[i].card_name) == None
+            ):
+                self.rank_difference += abs(
+                    cards[i].get_rank() - (cards[i - 1].get_rank() + 1)
+                )
+                self.rank.insert(cards[i].card_name)
+            else:
+                return -1
+        return self.rank_difference
 
-        return True
+    def toggle_ace_rank_value(self, checking_for_pure_sequence):
+        self.max_rank = find_max_rank(self.__cards, checking_for_pure_sequence)
+        self.min_rank = find_min_rank(self.__cards, checking_for_pure_sequence)
+
+        if 14 - self.max_rank > self.min_rank - 1:
+            self.desired_rank = 1
+        else:
+            self.desired_rank = 14
+
+        for card in self.__cards:
+            if card.rank != None and card.rank[:1] == "A" and card.get_rank() != self.desired_rank:
+                card.toggle_ace_rank()
 
     # Getters for attributes
     def get_sequence_status(self):
