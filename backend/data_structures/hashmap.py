@@ -38,7 +38,7 @@ class HashMap:
                 raise Exception("A value associated to this key already exists.")
 
     # Insert and resize hashmap
-    def insert(self, key, value):
+    def insert(self, key, value=True):
         if self.current_size <= self.total_size // 2:
             self._insert_data(key, value)
         else:

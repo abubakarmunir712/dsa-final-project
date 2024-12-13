@@ -33,6 +33,10 @@ class Card:
 
         self.visible = False
         self.joker = is_joker
+        if suit is None:
+            self.card_name = "joker"
+        else:
+            self.card_name = self.suit + "__" + self.rank
 
     def _is_valid_rank(self, input_rank):
         return input_rank.upper() in [rank.value for rank in Rank]
