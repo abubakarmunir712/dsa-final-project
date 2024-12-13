@@ -57,15 +57,9 @@ class Player:
 
         suits_array = [self.hearts, self.spades, self.diamonds, self.clubs, self.joker]
         for i in range(5):
-
-            print(f"------------{i+1}-------------")
-            print(self.has_first_life, self.has_second_life)
-
             self.__hand[i] = Sequence(
                 suits_array[i], self.has_first_life, self.has_second_life
             )
-
-            self.check_sequence_status()
 
     # Check if player has first life and second life
     def check_sequence_status(self):
@@ -75,3 +69,56 @@ class Player:
                     self.has_first_life = True
                 elif self.__hand[i].get_sequence_status() == Status.SECOND_LIFE.value:
                     self.has_second_life = True
+
+    def play(self):
+        if self.__is_AI:
+            pass
+        else:
+            pass
+
+    def move_card(self, sequence_number_1, sequence_number_2, card_name):
+        # Sequence no 1 represent seq from where card is being removed
+        # Sequence no 2 represent seq from where card is being added
+        if (
+            sequence_number_1 < 0
+            or sequence_number_1 > 4
+            or sequence_number_2 < 0
+            or sequence_number_2 > 4
+        ):
+            return False
+        card = self.__hand[sequence_number_1].remove_card_from_sequence(card_name)
+        if (
+            card is not None
+            and self.__hand[sequence_number_2].get_number_of_cards() != 0
+        ):
+            self.__hand[sequence_number_2].insert_card_into_sequence(card)
+            return True
+        return False
+
+    # Make a group of cards
+    def group_cards(self, cards_list):
+        # Format of card_list = list of tuples in this format (sequence_number, "card_name")
+        self.cards_list = []
+        for card in cards_list:
+            if card[0] < 5 and card[0] >= 0:
+                card = self.__hand[card[0]].remove_card_from_sequence(card[1])
+                if card is not None:
+                    self.cards_list.append(card)
+                else:
+                    return False
+            else:
+                return False
+
+        # Insert cards into first empty sequence (if any)
+        for i in range(5):
+            if self.__hand[i].get_number_of_cards() == 0:
+                self.__hand[i] = Sequence(
+                    self.cards_list, self.has_first_life, self.has_second_life
+                )
+                return True
+
+        # If no sequence is empty append it to last sequence
+        self.__hand[4] = Sequence(
+            self.cards_list, self.has_first_life, self.has_second_life
+        )
+        return True
