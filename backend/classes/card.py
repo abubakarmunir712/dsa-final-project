@@ -38,12 +38,15 @@ class Card:
         else:
             self.card_name = self.suit + "__" + self.rank[:1]
 
+    # Check if rank is valid
     def _is_valid_rank(self, input_rank):
         return input_rank.upper() in [rank.value for rank in Rank]
 
+    # Check if suit is valid
     def _is_valid_suit(self, input_suit):
         return input_suit.lower() == input_suit.lower() in [suit.value for suit in Suit]
 
+    # Getters
     def get_suit(self):
         return self.suit
 
@@ -66,6 +69,7 @@ class Card:
         else:
             return int(self.rank)
 
+    # Ace toggle function
     def toggle_ace_rank(self):
         if self.rank == "A":
             self.rank = "A+"
@@ -76,6 +80,7 @@ class Card:
         else:
             return False
 
+    # Get rank
     def get_rank(self):
         if self.rank == "A":
             return 1
