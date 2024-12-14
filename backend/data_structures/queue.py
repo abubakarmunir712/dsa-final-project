@@ -13,7 +13,7 @@ class Queue:
 
     # Dequeue element
     def dequeue(self):
-        return self.__queue.remove_from_head()
+        return self.__queue.remove_from_head().data
 
     # Get size of the queue
     def get_size(self):
@@ -21,7 +21,7 @@ class Queue:
 
     # Getting the first card, the head of queue
     def get_first_element(self):
-        return self.__queue.view_first_node()
+        return self.__queue.view_first_node().data
 
     # Check if the queue is empty
     def is_empty(self):
