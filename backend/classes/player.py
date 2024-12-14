@@ -70,7 +70,7 @@ class Player:
         self.has_second_life = False
         self.first_life_index = -1
         self.second_life_index = -1
-        for i in range(3):
+        for j in range(3):
             for i in range(5):
                 if i == self.first_life_index or i == self.second_life_index:
                     continue
@@ -154,5 +154,13 @@ class Player:
         if self.card is not None:
             self.__hand[4].insert_card_into_sequence(self.card)
             self.check_sequence_status()
+            return True
+        return False
+
+    # Move card to waste pile
+    def discard_card(self, sequence_no, card_name, pile: WastePile):
+        self.card = self.__hand[sequence_no].remove_card_from_sequence(card_name)
+        if self.card is not None:
+            pile.insert_card(self.card)
             return True
         return False

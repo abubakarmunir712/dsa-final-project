@@ -16,3 +16,7 @@ class WastePile:
             return None
         else:
             return self.pile.pop()
+
+    def insert_card(self, card: Card):
+        self.pile.push(card)
+        return True

@@ -1,4 +1,5 @@
 from classes.card import Card
+from typing import List
 import random
 
 
@@ -6,15 +7,30 @@ import random
 class Deck:
     # Constructor
     def __init__(self):
-        self.cards = []
-        self.initialize_deck()
+        self.cards: List[Card] = []
+        self.__ranks = [
+            "A",
+            "K",
+            "Q",
+            "J",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+        ]
+        self.__suits = ["Hearts", "Diamonds", "Spades", "Clubs"]
+        self.initialize_deck(self.__ranks, self.__suits)
+        self.joker = self.make_joker()
         self.shuffle()
 
     # Initialize deck
-    def initialize_deck(self):
+    def initialize_deck(self, ranks, suits):
         # Suits and ranks of the cards
-        suits = ["Hearts", "Diamonds", "Spades", "Clubs"]
-        ranks = ["A", "K", "Q", "J", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
         # Adding 2 sets of 52 cards to ensure the game logic
         for suit in suits:
@@ -36,3 +52,15 @@ class Deck:
         if len(self.cards) == 0:
             return None
         return self.cards.pop()
+
+    def make_joker(self):
+        self.card_name = (
+            random.choice(self.__suits) + "__" + random.choice(self.__ranks)
+        )
+        for card in self.cards:
+            if card.card_name == self.card_name:
+                card.make_joker()
+        return self.card_name
+
+    def get_all_cards(self):
+        return self.cards
