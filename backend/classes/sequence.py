@@ -105,7 +105,13 @@ class Sequence:
         # Set can contain at most 4 cards otherwise suit will start repeating
         if len(self.__cards) > 4:
             return False
-        self.rank = self.__cards[0].rank[:1]
+        self.rank = None
+        for card in self.__cards:
+            if card.get_rank() != 0:
+                self.rank = card.rank[:1]
+                break
+        if self.rank is None:
+            return True
         self.suit = HashMap(10)
         for index, card in enumerate(self.__cards):
             if index in self.jokers[0] or index in self.jokers[1]:
@@ -169,12 +175,12 @@ class Sequence:
     def get_cards(self):
         return self.__cards
 
-    # Get all jokers in set
+    # Get all jokers in sequence
     def get_jokers(self):
         self.wild_jokers = [
             index
             for index, card in enumerate(self.__cards)
-            if (card.is_joker() and card.get_rank != 0)
+            if (card.is_joker() and card.get_rank() != 0)
         ]
         self.printed_jokers = [
             index for index, card in enumerate(self.__cards) if card.get_rank() == 0
@@ -203,7 +209,7 @@ class Sequence:
     # Remove a card from sequence
     def remove_card_from_sequence(self, card_name) -> Card:
         self.index = None
-        for i in range (len(self.__cards)):
+        for i in range(len(self.__cards)):
             if self.__cards[i].card_name == card_name:
                 self.index = i
                 break
