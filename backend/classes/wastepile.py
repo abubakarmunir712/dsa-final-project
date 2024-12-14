@@ -20,3 +20,6 @@ class WastePile:
     def insert_card(self, card: Card):
         self.pile.push(card)
         return True
+
+    def is_empty(self):
+        return self.pile.is_empty()

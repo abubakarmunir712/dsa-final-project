@@ -1,5 +1,6 @@
 from classes.deck import Deck
 from classes.player import Player
+from bot.bot import AIPlayer
 from classes.stockpile import StockPile
 from classes.wastepile import WastePile
 from typing import List
@@ -7,7 +8,7 @@ import uuid
 
 
 class Game:
-    def __init__(self, no_of_players=2, no_ai_players=0):
+    def __init__(self, player_names=None, no_of_players=2, no_ai_players=0):
         self.game_id = str(uuid.uuid4())
         self.no_of_players = no_of_players
         self.players_list: List[Player] = []
@@ -16,13 +17,25 @@ class Game:
         self.joker = self.cards.joker  # Printed joker in this game
         # Create players
         for i in range(no_of_players):
+            if self.players_joined == no_of_players or self.players_joined == 6:
+                break
             is_AI = True if i < no_ai_players else False
             player_cards = []
             player_id = str(uuid.uuid4())
+
             # Getting cards for player
             for j in range(13):
                 player_cards.append(self.cards.draw_card())
-            self.players_list.append(Player(player_cards, "Unknown", is_AI, player_id))
+
+            if is_AI:
+                self.players_list.append(
+                    AIPlayer(player_cards, f"AI Player {i}", is_AI, player_id)
+                )
+            else:
+                self.players_list.append(
+                    Player(player_cards, player_names.pop(0), is_AI, player_id)
+                )
+            self.players_joined += 1
 
         self.stockpile = StockPile(self.cards.get_all_cards())
         del self.cards  # Delete deck object
@@ -38,7 +51,6 @@ class Game:
                     card_names = [card.card_name for card in sequence.get_cards()]
                     cards_list.append([sequence_status] + card_names)
                 return cards_list
-
 
         return None
 
