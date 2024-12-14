@@ -53,14 +53,16 @@ class Deck:
             return None
         return self.cards.pop()
 
+    # Make joker
     def make_joker(self):
-        self.card_name = (
-            random.choice(self.__suits) + "__" + random.choice(self.__ranks)
-        )
+        joker_rank = random.choice(self.__ranks)
         for card in self.cards:
-            if card.card_name == self.card_name:
+            if card.is_joker():
+                continue
+            if card.rank == joker_rank:
                 card.make_joker()
-        return self.card_name
+        return joker_rank
 
+    # Get all cards
     def get_all_cards(self):
         return self.cards

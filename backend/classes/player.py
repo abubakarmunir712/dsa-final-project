@@ -63,6 +63,13 @@ class Player:
                 suits_array[i], self.has_first_life, self.has_second_life
             )
         self.check_sequence_status()
+        self.calulate_points()
+    
+    # Calculate points of player
+    def calulate_points(self):
+        self.points = 0
+        for i in range(5):
+            self.points += self.hand[i].get_points()
 
     # Check if player has first life and second life
     def check_sequence_status(self):
