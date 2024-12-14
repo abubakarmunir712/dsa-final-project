@@ -11,30 +11,30 @@ class Player:
 
     # Constructor
     def __init__(self, cards: List[Card], name="Unknown", is_AI=False, player_id=None):
-        self.__hand = [None] * 5
-        self.__name = name
-        self.__points = 0
-        self.__is_AI = is_AI
-        self.__player_id = player_id
+        self.hand = [None] * 5
+        self.name = name
+        self.points = 0
+        self.is_AI = is_AI
+        self.player_id = player_id
         self.has_first_life = False
         self.has_second_life = False
         self.populate_sequences(cards)
 
     # Getters for attributes
     def get_name(self):
-        return self.__name
+        return self.name
 
     def get_hand(self):
-        return self.__hand
+        return self.hand
 
     def get_points(self):
-        return self.__points
+        return self.points
 
     def get_is_AI(self):
-        return self.__is_AI
+        return self.is_AI
 
     def get_player_id(self):
-        return self.__player_id
+        return self.player_id
 
     # Populate hand of player
     def populate_sequences(self, cards: List[Card]):
@@ -59,7 +59,7 @@ class Player:
 
         suits_array = [self.hearts, self.spades, self.diamonds, self.clubs, self.joker]
         for i in range(5):
-            self.__hand[i] = Sequence(
+            self.hand[i] = Sequence(
                 suits_array[i], self.has_first_life, self.has_second_life
             )
         self.check_sequence_status()
@@ -74,10 +74,10 @@ class Player:
             for i in range(5):
                 if i == self.first_life_index or i == self.second_life_index:
                     continue
-                if self.__hand[i] != None:
+                if self.hand[i] != None:
                     # Check if sequence is first life
                     if (
-                        self.__hand[i].check_status(
+                        self.hand[i].check_status(
                             self.has_first_life, self.has_second_life
                         )
                         == Status.FIRST_LIFE
@@ -87,7 +87,7 @@ class Player:
 
                     # Check if sequence is second life
                     elif (
-                        self.__hand[i].check_status(
+                        self.hand[i].check_status(
                             self.has_first_life, self.has_second_life
                         )
                         == Status.SECOND_LIFE
@@ -105,9 +105,9 @@ class Player:
             or sequence_number_2 > 4
         ):
             return False
-        self.card = self.__hand[sequence_number_1].remove_card_from_sequence(card_name)
+        self.card = self.hand[sequence_number_1].remove_card_from_sequence(card_name)
         if self.card is not None:
-            self.__hand[sequence_number_2].insert_card_into_sequence(self.card)
+            self.hand[sequence_number_2].insert_card_into_sequence(self.card)
             self.check_sequence_status()
             return True
         return False
@@ -118,7 +118,7 @@ class Player:
         self.cards_list = []
         for card in cards_list:
             if card[0] < 5 and card[0] >= 0:
-                self.card = self.__hand[card[0]].remove_card_from_sequence(card[1])
+                self.card = self.hand[card[0]].remove_card_from_sequence(card[1])
                 if self.card is not None:
                     self.cards_list.append(self.card)
             else:
@@ -126,8 +126,8 @@ class Player:
 
         # Insert cards into first empty sequence (if any)
         for i in range(5):
-            if self.__hand[i].get_number_of_cards() == 0:
-                self.__hand[i] = Sequence(
+            if self.hand[i].get_number_of_cards() == 0:
+                self.hand[i] = Sequence(
                     self.cards_list, self.has_first_life, self.has_second_life
                 )
                 self.check_sequence_status()
@@ -135,7 +135,7 @@ class Player:
 
         # If no sequence is empty append it to last sequence
         for card in self.cards_list:
-            self.__hand[4].insert_card_into_sequence(card)
+            self.hand[4].insert_card_into_sequence(card)
         self.check_sequence_status()
         return True
 
@@ -144,7 +144,7 @@ class Player:
         self.card = pile.get_card()
         if self.card is None:
             return False
-        self.__hand[4].insert_card_into_sequence(self.card)
+        self.hand[4].insert_card_into_sequence(self.card)
         self.check_sequence_status()
         return True
 
@@ -152,14 +152,14 @@ class Player:
     def get_card_from_stockpile(self, pile: StockPile) -> bool:
         self.card = pile.get_card()
         if self.card is not None:
-            self.__hand[4].insert_card_into_sequence(self.card)
+            self.hand[4].insert_card_into_sequence(self.card)
             self.check_sequence_status()
             return True
         return False
 
     # Move card to waste pile
     def discard_card(self, sequence_no, card_name, pile: WastePile):
-        self.card = self.__hand[sequence_no].remove_card_from_sequence(card_name)
+        self.card = self.hand[sequence_no].remove_card_from_sequence(card_name)
         if self.card is not None:
             pile.insert_card(self.card)
             return True
