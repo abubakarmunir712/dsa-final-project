@@ -13,7 +13,7 @@ class Stack:
 
     # pop element
     def pop(self):
-        return self.__stack.remove_from_head().data
+        return self.__stack.remove_from_head()
 
     # Get size of the stack
     def get_size(self):
@@ -21,7 +21,7 @@ class Stack:
 
     # Getting the first card, the head of stack
     def get_top(self):
-        return self.__stack.view_first_node().data
+        return self.__stack.view_first_node()
 
     # Check if the queue is empty
     def is_empty(self):

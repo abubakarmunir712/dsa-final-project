@@ -64,7 +64,7 @@ class LinkedList:
             self.__head.prev = None
 
         self.__size -= 1
-        return temp
+        return temp.data
 
     # Insert at tail
     def insert_at_tail(self, data):
@@ -108,19 +108,19 @@ class LinkedList:
             self.__tail.next = None
 
         self.__size -= 1
-        return temp
+        return temp.data
 
     # Viewing the first element
     def view_first_node(self):
         if self.__head:
-            return self.__head
+            return self.__head.data
         else:
             return None
 
     # Viewing the last element
     def view_last_node(self):
         if self.__tail:
-            return self.__tail
+            return self.__tail.data
         else:
             return None
 
