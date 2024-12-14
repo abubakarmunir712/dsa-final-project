@@ -121,6 +121,8 @@ class Sequence:
 
     # Calculate
     def calculate_rank_difference(self, cards: List[Card]):
+        if len(cards) == 0:
+            return 0
         cards = bubble_sort(cards)
         self.rank_difference = 0
         self.suit = cards[0].get_suit()
