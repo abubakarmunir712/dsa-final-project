@@ -34,32 +34,16 @@ class LinkedList:
 
         self.__size += 1
 
+    # Remove from head
     def remove_from_head(self):
-
-        temp = None
-
-        # If linkedlist is empty
-        if self.__head == None:
+        if self.__head is None:  # Linked list is empty
             return None
 
-        # If linkedlist is not empty
-
-        # If head and tail are same
-        if self.__head == self.__tail:
-            temp = self.__head
-            self.__head = None
-            self.__tail = None
-
-        # If head's next element is tail
-        elif self.__head.next == self.__tail:
-            temp = self.__head
-            self.__tail = self.__head
-            self.__head.prev = None
-            self.__head.next = None
-
-        # If head's next element is not tail
+        temp = self.__head
+        
+        if self.__head == self.__tail:  # If only one node left in list
+            self.__head = self.__tail = None
         else:
-            temp = self.__head
             self.__head = self.__head.next
             self.__head.prev = None
 
@@ -68,12 +52,11 @@ class LinkedList:
 
     # Insert at tail
     def insert_at_tail(self, data):
-
         # New node to be inserted
         new_node = Node(data)
 
         # If linkedlist is empty
-        if self.__head == None:
+        if self.__head is None:
             self.__head = new_node
             self.__tail = new_node
 
@@ -87,23 +70,14 @@ class LinkedList:
 
     # Remove from tail
     def remove_from_tail(self):
-        temp = None
-
-        # If linkedlist is empty
-        if self.__head == None:
+        if self.__head is None:  # Linked list is empty
             return None
 
-        # If linkedlist is not empty
-
-        # If head and tail are same
-        if self.__head == self.__tail:
-            temp = self.__tail
-            self.__head = None
-            self.__tail = None
-
-        # If head and tail are not same
+        temp = self.__tail
+        
+        if self.__head == self.__tail:  # If only one node left in list
+            self.__head = self.__tail = None
         else:
-            temp = self.__tail
             self.__tail = self.__tail.prev
             self.__tail.next = None
 
@@ -126,10 +100,7 @@ class LinkedList:
 
     # Checks if the linkedlist is empty
     def is_empty(self):
-        if self.__head == None:
-            return True
-        else:
-            return False
+        return self.__head is None
 
     # Get the size of the linkedlist
     def get_size(self):
