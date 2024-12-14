@@ -9,12 +9,12 @@ from classes.player import Player
 class Game:
     # Constructor
     def __init__(self, no_of_players=1, no_ai_players=1):
-        self.game_id = str(uuid.uuid4()) # Generate a unique game ID
-        self.stock_pile = Queue() # Stock pile
-        self.waste_pile = Stack() # Waste pile
-        self.deck = Deck() # Deck
-        self.players = Queue() # Players
-        self.initialize_game(no_of_players, no_ai_players) # Initialize game
+        self.game_id = str(uuid.uuid4())  # Generate a unique game ID
+        self.stock_pile = Queue()  # Stock pile
+        self.waste_pile = Stack()  # Waste pile
+        self.deck = Deck()  # Deck
+        self.players = Queue()  # Players
+        self.initialize_game(no_of_players, no_ai_players)  # Initialize game
 
     # Initializing game
     def initialize_game(self, no_of_players, no_ai_players):
@@ -39,7 +39,7 @@ class Game:
             player = Player(cards, f"AI-Player {i}", True, id)
             self.players.enqueue(player)
             id += 1
-            
+
         # Dealing remaining cards to the stock pile
         while self.deck.cards:
             self.stock_pile.enqueue(self.deck.draw_card())

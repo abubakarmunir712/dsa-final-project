@@ -70,7 +70,7 @@ class Player:
         self.has_second_life = False
         self.first_life_index = -1
         self.second_life_index = -1
-        for i in range(3):
+        for _ in range(3):
             for i in range(5):
                 if i == self.first_life_index or i == self.second_life_index:
                     continue
