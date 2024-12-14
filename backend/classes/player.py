@@ -28,6 +28,8 @@ class Player:
         return self.hand
 
     def get_points(self):
+        if self.points > 80:
+            return 80
         return self.points
 
     def get_is_AI(self):
@@ -64,7 +66,7 @@ class Player:
             )
         self.check_sequence_status()
         self.calulate_points()
-    
+
     # Calculate points of player
     def calulate_points(self):
         self.points = 0
