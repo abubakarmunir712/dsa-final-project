@@ -105,5 +105,4 @@ class Game:
         for player in self.players_list:
             if player.get_player_id() == player_id:
                 return player.discard_card(sequence_no, card_name, self.wastepile)
-        print("Test")
         return False
