@@ -46,16 +46,16 @@ class Player:
         self.joker = []
 
         for i in range(len(cards)):
-            if cards[i].get_suit() == "hearts":
-                self.hearts.append(cards[i])
-            elif cards[i].get_suit() == "spades":
-                self.spades.append(cards[i])
-            elif cards[i].get_suit() == "clubs":
-                self.clubs.append(cards[i])
-            elif cards[i].get_suit() == "diamonds":
-                self.diamonds.append(cards[i])
-            else:
+            if cards[i].get_suit() is None:
                 self.joker.append(cards[i])
+            elif cards[i].get_suit().lower() == "hearts":
+                self.hearts.append(cards[i])
+            elif cards[i].get_suit().lower() == "spades":
+                self.spades.append(cards[i])
+            elif cards[i].get_suit().lower() == "clubs":
+                self.clubs.append(cards[i])
+            elif cards[i].get_suit().lower() == "diamonds":
+                self.diamonds.append(cards[i])
 
         suits_array = [self.hearts, self.spades, self.diamonds, self.clubs, self.joker]
         for i in range(5):
