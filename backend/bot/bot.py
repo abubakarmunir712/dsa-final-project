@@ -1,10 +1,10 @@
 from typing import List, Tuple
 from classes.card import Card
+from classes.player import Player
 from classes.stockpile import StockPile
 from classes.wastepile import WastePile
-from collections import deque
 
-class Bot:
+class Bot(Player):
     def _init_(self, hand: List[Card], stock_pile: StockPile, waste_pile: WastePile):
         self.hand = hand
         self.stock_pile = stock_pile
