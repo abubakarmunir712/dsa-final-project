@@ -13,3 +13,7 @@ class StockPile:
     # Get top card
     def get_card(self):
         return self.pile.dequeue()
+    
+    # If the stockpile is empty
+    def is_empty(self):
+        return self.pile.is_empty()

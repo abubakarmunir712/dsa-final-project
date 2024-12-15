@@ -1,5 +1,3 @@
-from typing import List
-from classes.card import Card
 from data_structures.stack import Stack
 
 
@@ -16,10 +14,18 @@ class WastePile:
             return None
         else:
             return self.pile.pop()
+    
+    # Get top card
+    def get_top_card(self):
+        if self.pile.get_top() is None:
+            return None
+        return self.pile.get_top()
 
-    def insert_card(self, card: Card):
+    # Insert card
+    def insert_card(self, card):
         self.pile.push(card)
         return True
 
+    # If the waste pile is empty
     def is_empty(self):
         return self.pile.is_empty()
