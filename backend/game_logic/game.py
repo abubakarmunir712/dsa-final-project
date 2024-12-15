@@ -33,7 +33,6 @@ class Game:
                 self.players_list.append(
                     Player(player_cards, "Unknown", is_AI, player_id)
                 )
-            
 
         self.stockpile = StockPile(self.cards.get_all_cards())
         del self.cards  # Delete deck object
@@ -88,21 +87,32 @@ class Game:
     def remove_from_stockpile(self, player_id):
         for player in self.players_list:
             if player.get_player_id() == player_id:
-                return player.get_card_from_stockpile(self.stockpile)
+                if player.get_card_from_stockpile(self.stockpile):
+                    return True
+                else:
+                    return "Stock Pile is empty"
         return False
 
     # Get card from waste pile
     def remove_from_wastepile(self, player_id):
         for player in self.players_list:
             if player.get_player_id() == player_id:
-                return player.get_card_from_wastepile(self.wastepile)
+                if player.get_card_from_wastepile(self.wastepile):
+                    return True
+                else:
+                    return "Waste Pile is empty"
         return False
 
     # Discard card or move to waste pile
     def discard_card(self, player_id, sequence_no, card_name):
         for player in self.players_list:
             if player.get_player_id() == player_id:
-                return player.discard_card(sequence_no, card_name, self.wastepile)
+                if sequence_no > 4 or sequence_no < 0:
+                    return "Invalid sequence number!"
+                if player.discard_card(sequence_no, card_name, self.wastepile) == True:
+                    return True
+                else:
+                    return "Sequence is empty or card does not exist"
         return False
 
     # Winner selection
