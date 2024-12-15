@@ -23,7 +23,7 @@ class Deck:
             "9",
             "10",
         ]
-        self.__suits = ["Hearts", "Diamonds", "Spades", "Clubs"]
+        self.__suits = ["hearts", "diamonds", "spades", "clubs"]
         self.initialize_deck(self.__ranks, self.__suits)
         self.joker = self.make_joker()
         self.shuffle()
