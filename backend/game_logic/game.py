@@ -55,7 +55,13 @@ class Game:
     def move_cards(self, player_id, sequence_no_1, sequence_no_2, card_name):
         for player in self.players_list:
             if player.get_player_id() == player_id:
-                return player.move_card(sequence_no_1, sequence_no_2, card_name)
+                result = player.move_card(sequence_no_1, sequence_no_2, card_name)
+                if result == True:
+                    return True
+                elif result == False:
+                    return "Card does not exist in given sequence"
+                else:
+                    return result
         return None
 
     # Group cards
@@ -63,8 +69,13 @@ class Game:
         if self.is_valid_card_list(cards_list):
             for player in self.players_list:
                 if player.get_player_id() == player_id:
-                    return player.group_cards(cards_list)
-        return False
+                    if player.group_cards(cards_list) == False:
+                        return "Invalid sequence number"
+                    else:
+                        return True
+            return False
+        else:
+            return "Group contains invalid cards"
 
     def is_valid_card_list(input_data):
         # Check if input_data is a list
