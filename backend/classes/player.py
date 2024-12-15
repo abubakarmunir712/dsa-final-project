@@ -114,10 +114,11 @@ class Player:
             or sequence_number_2 > 4
         ):
             return False
-        self.card = self.hand[sequence_number_1].remove_card_from_sequence(card_name)
-        if self.card is not None:
-            self.hand[sequence_number_2].insert_card_into_sequence(self.card)
+        card = self.hand[sequence_number_1].remove_card_from_sequence(card_name)
+        if card is not None:
+            self.hand[sequence_number_2].insert_card_into_sequence(card)
             self.check_sequence_status()
+            self.calulate_points()
             return True
         return False
 
@@ -127,9 +128,11 @@ class Player:
         self.cards_list = []
         for card in cards_list:
             if card[0] < 5 and card[0] >= 0:
-                self.card = self.hand[card[0]].remove_card_from_sequence(card[1])
-                if self.card is not None:
-                    self.cards_list.append(self.card)
+                card = self.hand[card[0]].remove_card_from_sequence(card[1])
+                if card is not None:
+                    self.cards_list.append(card)
+                    self.check_sequence_status()
+                    self.calulate_points()
             else:
                 return False
 
@@ -140,36 +143,42 @@ class Player:
                     self.cards_list, self.has_first_life, self.has_second_life
                 )
                 self.check_sequence_status()
+                self.calulate_points()
                 return True
 
         # If no sequence is empty append it to last sequence
         for card in self.cards_list:
             self.hand[4].insert_card_into_sequence(card)
         self.check_sequence_status()
+        self.calulate_points()
         return True
 
     # Getting card from waste pile
     def get_card_from_wastepile(self, pile: WastePile) -> bool:
-        self.card = pile.get_card()
-        if self.card is None:
+        card = pile.get_card()
+        if card is None:
             return False
-        self.hand[4].insert_card_into_sequence(self.card)
+        self.hand[4].insert_card_into_sequence(card)
         self.check_sequence_status()
+        self.calulate_points()
         return True
 
     # Get card from stock pile
     def get_card_from_stockpile(self, pile: StockPile) -> bool:
-        self.card = pile.get_card()
-        if self.card is not None:
-            self.hand[4].insert_card_into_sequence(self.card)
+        card = pile.get_card()
+        if card is not None:
+            self.hand[4].insert_card_into_sequence(card)
             self.check_sequence_status()
+            self.calulate_points()
             return True
         return False
 
     # Move card to waste pile
     def discard_card(self, sequence_no, card_name, pile: WastePile):
-        self.card = self.hand[sequence_no].remove_card_from_sequence(card_name)
-        if self.card is not None:
-            pile.insert_card(self.card)
+        card = self.hand[sequence_no].remove_card_from_sequence(card_name)
+        if card is not None:
+            pile.insert_card(card)
+            self.check_sequence_status()
+            self.calulate_points()
             return True
         return False
