@@ -30,26 +30,6 @@ def main():
                 turn_change = False
                 is_card_drawn = False
 
-
-                # Initialize the player hand with Card objects
-                player_hand = [
-                    Card(Suit.DIAMONDS.value, Rank.FIVE.value),
-                    Card(Suit.DIAMONDS.value, Rank.SIX.value),
-                    Card(Suit.DIAMONDS.value, Rank.SEVEN.value),
-                    Card(Suit.DIAMONDS.value, Rank.EIGHT.value),
-                    Card(Suit.DIAMONDS.value, Rank.NINE.value),
-                    Card(Suit.DIAMONDS.value, Rank.TEN.value),
-                    Card(Suit.CLUBS.value, Rank.THREE.value),
-                    Card(Suit.DIAMONDS.value, Rank.THREE.value),
-                    Card(Suit.HEARTS.value, Rank.THREE.value),
-                    Card(Suit.SPADES.value, Rank.NINE.value),
-                    Card(Suit.HEARTS.value, Rank.NINE.value),
-                    Card(Suit.CLUBS.value, Rank.NINE.value),
-                    Card(None, None, is_joker=True),  # Joker card
-                ]
-
-                player = Player(player_hand, "Player 1",False)
-                game.players_list.append(player)
                 player_turn = game.get_players_list().pop(0)
 
                 # Game loop
