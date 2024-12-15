@@ -93,7 +93,7 @@ def main():
         if result == True:
             return {
                 "message": "Card removed successfully",
-                "cards": game.get_cards(),
+                "cards": game.get_cards(player_id),
             }, 200
         elif result == False:
             return {"message": "Player not found"}, 404
@@ -168,6 +168,44 @@ def main():
                 "cards": game.get_cards(player_id),
             }, 200
         elif result == False:
+            return {"message": "Player not found"}, 404
+        else:
+            return {"message": result}, 400
+
+    # -----------------------------------------------------------------------------------
+    # Get card from stockpile
+    # endpoint = "/discard-card"
+    """requires body in this form
+    {
+    "game-id":"game id here",
+    "player-id":"player id here",
+    "sequence-no":"sequence no here",
+    "card-name":"card name here"
+    }
+    """
+
+    @app.route("/move-card")
+    def move_card():
+        data = request.get_json()
+        if not data:
+            return {"message": "Game id and Player id is required"}, 400
+        game_id = data.get("game-id")
+        player_id = data.get("player-id")
+        sequence_no_1 = data.get("sequence-1")
+        sequence_no_2 = data.get("sequence-2")
+        card_name = data.get("card-name")
+        if sequence_no_1 is None or card_name is None or sequence_no_2 is None:
+            return {"message": "Both sequences and card_name are required"}, 400
+        # Game id and player id must be present
+        if game_id is None or player_id is None:
+            return {"message": "Both game id and player id are required"}, 400
+        if game_id not in games:
+            return {"message": "Game not found"}, 404
+        game: Game = games[game_id]
+        result = game.move_cards(player_id, sequence_no_1, sequence_no_2, card_name)
+        if result == True:
+            return {"message": "Moved successfully", "cards":game.get_cards(player_id)}, 200
+        elif result == None:
             return {"message": "Player not found"}, 404
         else:
             return {"message": result}, 400
