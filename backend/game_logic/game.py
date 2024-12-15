@@ -14,7 +14,7 @@ class Game:
         self.players_list: List[Player] = []
         self.players_joined = no_of_ai_players
         self.cards = Deck()
-        self.joker = self.cards.joker  # Printed joker in this game
+        self.joker_card = self.cards.joker  # Printed joker in this game
         # Create players
         for i in range(no_of_players):
             is_AI = True if i < no_of_ai_players else False
@@ -37,6 +37,36 @@ class Game:
         self.stockpile = StockPile(self.cards.get_all_cards())
         del self.cards  # Delete deck object
         self.wastepile = WastePile()
+
+    # Getters for the game
+    def get_game_id(self):
+        return self.game_id
+
+    def get_no_of_players(self):
+        return self.no_of_players
+
+    def get_players_list(self):
+        return self.players_list
+
+    def get_players_joined(self):
+        return self.players_joined
+
+    def get_stockpile(self):
+        return self.stockpile
+
+    def get_wastepile(self):
+        return self.wastepile
+
+    def get_wild_joker(self):
+        return self.joker_card
+    
+    # Get player by player id
+    def get_player(self, player_id):
+        for player in self.players_list:
+            if player.get_player_id() == player_id:
+                return player
+        return None
+
 
     # Get cards of a player by player id
     def get_cards(self, player_id):
