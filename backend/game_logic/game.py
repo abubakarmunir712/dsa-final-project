@@ -8,18 +8,16 @@ import uuid
 
 
 class Game:
-    def __init__(self, player_names=None, no_of_players=2, no_ai_players=0):
+    def __init__(self, player_names=None, no_of_players=2, no_of_ai_players=0):
         self.game_id = str(uuid.uuid4())
         self.no_of_players = no_of_players
         self.players_list: List[Player] = []
-        self.players_joined = 0
+        self.players_joined = no_of_ai_players
         self.cards = Deck()
         self.joker = self.cards.joker  # Printed joker in this game
         # Create players
         for i in range(no_of_players):
-            if self.players_joined == no_of_players or self.players_joined == 6:
-                break
-            is_AI = True if i < no_ai_players else False
+            is_AI = True if i < no_of_ai_players else False
             player_cards = []
             player_id = str(uuid.uuid4())
 
@@ -33,9 +31,9 @@ class Game:
                 )
             else:
                 self.players_list.append(
-                    Player(player_cards, player_names.pop(0), is_AI, player_id)
+                    Player(player_cards, "Unknown", is_AI, player_id)
                 )
-            self.players_joined += 1
+            
 
         self.stockpile = StockPile(self.cards.get_all_cards())
         del self.cards  # Delete deck object
@@ -113,9 +111,11 @@ class Game:
         for player in self.players_list:
             if player.get_points() == 0:
                 return player
-        
+
         # Check if stockpile and wastepile are empty then lowest points player wins the game
-        if self.stockpile.is_empty() and (self.wastepile.is_empty() or self.wastepile.get_top_card().is_joker()):
+        if self.stockpile.is_empty() and (
+            self.wastepile.is_empty() or self.wastepile.get_top_card().is_joker()
+        ):
             min_points = 999
             winner = None
             # Finding player with lowest points
