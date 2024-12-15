@@ -106,3 +106,23 @@ class Game:
             if player.get_player_id() == player_id:
                 return player.discard_card(sequence_no, card_name, self.wastepile)
         return False
+
+    # Winner selection
+    def winner_selection(self):
+        # Check if any player has 0 points to win the game
+        for player in self.players_list:
+            if player.get_points() == 0:
+                return player
+        
+        # Check if stockpile and wastepile are empty then lowest points player wins the game
+        if self.stockpile.is_empty() and (self.wastepile.is_empty() or self.wastepile.get_top_card().is_joker()):
+            min_points = 999
+            winner = None
+            # Finding player with lowest points
+            for player in self.players_list:
+                if player.get_points() < min_points:
+                    min_points = player.get_points()
+                    winner = player
+            return winner
+
+        return None
