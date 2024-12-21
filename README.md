@@ -1,5 +1,18 @@
 # DSA Final Project - Indian Rummy
 
+# Table of Contents
+
+- [Introduction](#introduction)
+- [Key Features](#key-features)
+- [Data Structures and Algorithms Used](#data-structures-and-algorithms-used)
+- [Technologies Used](#technologies-used)
+- [Code Structure](#code-structure)
+- [Folder Structuring](#folder-structuring)
+- [How to Run the Project](#how-to-run-the-project)
+- [Challenges and Solutions](#challenges-and-solutions)
+- [Contributions](#contributions)
+- [Conclusion](#conclusion)
+
 # Introduction
 
 Indian Rummy is a strategic multiplayer card game that involves each player being dealt 13 cards. The objective of the game is to form valid sequences and sets to win. This project implements a custom version of the game using various data structures and algorithms, such as Doubly Linked Lists, Queues, Stacks, Hashmaps, and Graphs. The game also features an AI player that intelligently evaluates hands and makes decisions based on the game state.
@@ -35,6 +48,10 @@ Validations and try-except has been added to ensure the valid input and error ha
 # Data Structures and Algorithms Used
 
 The data structures and algorithms used in this project are:
+
+## Arrays:
+
+Arrays are used in the game for managing cards and players.
 
 ## Doubly LinkedList:
 
@@ -92,47 +109,49 @@ The technologies used in the implementation are:
 
 # Code Structure
 
-## card.py
+Here is a brief overview of each file:
+
+## card.py:
 
 Contains the Card class, defining properties and behaviors of a playing card, including rank, suit, visibility, and points calculation.
 
-## deck.py
+## deck.py:
 
 Defines the Deck class, which creates, shuffles, and allows cards to be drawn or manipulated, including handling jokers.
 
-## stockpile.py
+## stockpile.py:
 
 Manages the stockpile, which stores and provides cards to players when drawn.
 
-## wastepile.py
+## wastepile.py:
 
 Handles the wastepile, where discarded cards are placed and can be accessed for future moves.
 
-## player.py
+## player.py:
 
 The Player class manages a player's hand, points, and actions like drawing, discarding, or moving cards between sequences.
 
-## sequence.py
+## sequence.py:
 
 Represents a collection of cards forming a sequence, handling validation, sorting, and calculations, including managing jokers and Ace adjustments.
 
-## game_logic.py
+## game_logic.py:
 
 Manages the main game logic, including player actions, deck handling, stockpile, wastepile, and determining the winner. Supports both AI and human players.
 
-## utilities.py
+## utilities.py:
 
 Contains utility functions like bubble sort, and functions to find min and max values, aiding sequence and set traversal.
 
-## backend/main.py
+## backend/main.py:
 
 The entry point for the server, connecting the backend to the game logic via Flask.
 
-## frontend/main.py
+## frontend/console/main.py:
 
 Contains the frontend code for the user interface, acting as the entry point for the game.
 
-## Enums Folder
+## Enums Folder:
 
 Contains enumeration files used throughout the game to define various statuses and game states
 
