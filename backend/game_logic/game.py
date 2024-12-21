@@ -11,10 +11,12 @@ class Game:
     def __init__(self, player_names=None, no_of_players=2, no_of_ai_players=0):
         self.game_id = str(uuid.uuid4())
         self.no_of_players = no_of_players
-        self.players_list: List[Player] = []
+        self.players_list = []
         self.players_joined = no_of_ai_players
+        self.is_started = False
         self.cards = Deck()
         self.joker_card = self.cards.joker  # Printed joker in this game
+        self.ai_player = []
         # Create players
         for i in range(no_of_players):
             is_AI = True if i < no_of_ai_players else False
@@ -26,7 +28,7 @@ class Game:
                 player_cards.append(self.cards.draw_card())
 
             if is_AI:
-                self.players_list.append(
+                self.ai_player.append(
                     AIPlayer(player_cards, f"AI Player {i}", is_AI, player_id)
                 )
             else:
@@ -34,9 +36,12 @@ class Game:
                     Player(player_cards, "Unknown", is_AI, player_id)
                 )
 
+        self.players_list = self.ai_player + self.players_list
+
         self.stockpile = StockPile(self.cards.get_all_cards())
         del self.cards  # Delete deck object
         self.wastepile = WastePile()
+        self.current_player = no_of_ai_players
 
     # Getters for the game
     def get_game_id(self):
@@ -59,14 +64,13 @@ class Game:
 
     def get_wild_joker(self):
         return self.joker_card
-    
+
     # Get player by player id
     def get_player(self, player_id):
         for player in self.players_list:
             if player.get_player_id() == player_id:
                 return player
         return None
-
 
     # Get cards of a player by player id
     def get_cards(self, player_id):
@@ -99,15 +103,18 @@ class Game:
         if self.is_valid_card_list(cards_list):
             for player in self.players_list:
                 if player.get_player_id() == player_id:
-                    if player.group_cards(cards_list) == False:
+                    result = player.group_cards(cards_list)
+                    if result == False:
                         return "Invalid sequence number"
-                    else:
+                    elif result == True:
                         return True
+                    else:
+                        return result
             return False
         else:
             return "Group contains invalid cards"
 
-    def is_valid_card_list(input_data):
+    def is_valid_card_list(self, input_data):
         # Check if input_data is a list
         if not isinstance(input_data, list):
             return False
@@ -128,6 +135,8 @@ class Game:
     def remove_from_stockpile(self, player_id):
         for player in self.players_list:
             if player.get_player_id() == player_id:
+                if len(player.get_cards()) != 13:
+                    return "You must have 13 cards!"
                 if player.get_card_from_stockpile(self.stockpile):
                     return True
                 else:
@@ -138,6 +147,8 @@ class Game:
     def remove_from_wastepile(self, player_id):
         for player in self.players_list:
             if player.get_player_id() == player_id:
+                if len(player.get_cards()) != 13:
+                    return "You must have 13 cards!"
                 if player.get_card_from_wastepile(self.wastepile):
                     return True
                 else:
@@ -148,6 +159,8 @@ class Game:
     def discard_card(self, player_id, sequence_no, card_name):
         for player in self.players_list:
             if player.get_player_id() == player_id:
+                if len(player.get_cards()) != 14:
+                    return "You must have 14 cards!"
                 if sequence_no > 4 or sequence_no < 0:
                     return "Invalid sequence number!"
                 if player.discard_card(sequence_no, card_name, self.wastepile) == True:
@@ -177,3 +190,9 @@ class Game:
             return winner
 
         return None
+
+    def move_to_next_player(self):
+        self.current_player = (self.current_player + 1) % self.no_of_players
+        if self.players_list[self.current_player].is_AI:
+            self.players_list[self.current_player].play(self.stockpile, self.wastepile)
+            self.move_to_next_player()

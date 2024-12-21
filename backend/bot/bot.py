@@ -1,159 +1,168 @@
-from typing import List
-from classes.card import Card
-from enums.status_enum import Status
-from classes.player import Player
-from classes.stockpile import StockPile
-from classes.wastepile import WastePile
-from data_structures.graph import Graph
-from classes.sequence import Sequence
+from collections import defaultdict
+from time import sleep
 
-class AIPlayer(Player):
-    def __init__(self, cards: List[Card], name="AI Player", is_AI=True, player_id=None):
-        super().__init__(cards, name, is_AI, player_id)
-        self.graph = Graph()  # Initialize a graph for the AI's cards
 
-    def play(self, stock_pile: StockPile, waste_pile: WastePile) -> bool:
-        """
-        The method where the AI makes its move. AI decides whether to draw from StockPile or WastePile,
-        tries to group cards into sequences, and discards unwanted cards.
-        """
-        print(f"{self.get_name()} is making its move.")
+class AIPlayer:
+    def __init__(self, cards, name="AI", is_AI=True, player_id=None):
+        self.name = name
+        self.is_AI = is_AI
+        self.graph = None
+        self.current_hand = cards
+        self.player_id = player_id
 
-        # Step 1: Decide whether to draw a card from the StockPile or WastePile
-        drawn_card = None
-        if waste_pile.is_empty():
-            drawn_card = self.get_card_from_stockpile(stock_pile)
-            print(f"{self.get_name()} drew a card from the StockPile.")
-        else:
-            drawn_card = self.get_card_from_wastepile(waste_pile)
-            print(f"{self.get_name()} drew a card from the WastePile.")
-        
-        if not drawn_card:
-            return False
+    def get_name(self):
+        return self.name
 
-        # Step 2: Add the drawn card to the graph and check sequences
-        self.add_card_to_graph(drawn_card)
-        self.group_cards_using_graph()
+    def build_graph(self):
+        try:
+            self.graph = defaultdict(list)
+            for card in self.current_hand:
+                rank, suit = card.get_rank(), card.suit
+                # Add edges for sequences
+                for next_card in self.current_hand:
+                    next_rank, next_suit = next_card.get_rank(), next_card.suit
+                    if suit == next_suit and next_rank == rank + 1:
+                        self.graph[card].append(next_card)
 
-        # Step 3: If sequence size exceeds 5, discard a card
-        if self.get_hand()[4].get_number_of_cards() > 5:  # Example condition, max cards in a sequence is 5
-            card_name_to_discard = self.decide_card_to_discard()
-            if card_name_to_discard:
-                self.discard_card(4, card_name_to_discard, waste_pile)
-                print(f"{self.get_name()} discarded {card_name_to_discard} to the WastePile.")
+                # Add edges for sets
+                for same_rank_card in self.current_hand:
+                    same_rank, same_suit = (
+                        same_rank_card.get_rank(),
+                        same_rank_card.suit,
+                    )
+                    if rank == same_rank and suit != same_suit:
+                        self.graph[card].append(same_rank_card)
+        except Exception as e:
+            raise e
 
-        # Step 4: Check for winning condition or if the AI needs to end its turn
-        self.check_sequence_status()
-        if self.has_won():
-            print(f"{self.get_name()} has won the game!")
-            return True  # AI wins the game
-        
-        return False  # AI's turn is over, game continues
+    def evaluate_hand(self):
+        try:
+            visited = set()
+            sequences = []
+            sets = []
 
-    def add_card_to_graph(self, card: Card) -> None:
-        """
-        Add the drawn card to the AI's graph and connect it to other cards in the hand
-        that can form valid sequences with it.
-        """
-        for sequence in self.get_hand():
-            # Check if the sequence is a valid Sequence object and contains cards
-            if isinstance(sequence, Sequence):
-                for existing_card in sequence.get_cards():  # Loop over the cards in the sequence
-                    if self.is_valid_sequence(existing_card, card):  # Check if the two cards can form a valid sequence
-                        self.graph.add_edge(existing_card.card_name, card.card_name)
-        self.graph.add_edge(card.card_name, card.card_name)  # A card is always connected to itself
+            def dfs(card, path, is_run):
+                visited.add(card)
+                path.append(card)
+                for neighbor in self.graph[card]:
+                    if neighbor not in visited:
+                        rank1, suit1 = card.get_rank(), card.suit
+                        rank2, suit2 = neighbor.get_rank(), neighbor.suit
+                        # Check for sequences
+                        if is_run and suit1 == suit2 and rank2 == rank1 + 1:
+                            dfs(neighbor, path, is_run)
 
-    def group_cards_using_graph(self) -> None:
-        """
-        Group cards into sequences based on the graph, finding all connected components.
-        """
-        visited = set()
-        for sequence in self.get_hand():
-            # Ensure we're dealing with valid sequences
-            if isinstance(sequence, Sequence):
-                for card in sequence.get_cards():
-                    if card.card_name not in visited:
-                        connected_sequence = self.graph.get_sequence_from_card(card.card_name)
-                        # Create a sequence with the found cards
-                        self.create_or_update_sequence(connected_sequence, visited)
+                        # Check for sets
+                        elif not is_run and rank1 == rank2 and suit1 != suit2:
+                            dfs(neighbor, path, is_run)
 
-    def create_or_update_sequence(self, sequence: List[str], visited: set) -> None:
-        """
-        Create a new sequence or update an existing sequence with the cards from the graph traversal.
-        """
-        if len(sequence) >= 3:  # Only consider valid sequences with at least 3 cards
-            sequence_obj = Sequence(sequence, Status.PURE_SEQUENCE)
-            self.hand.append(sequence_obj)  # Add the sequence to the AI's hand
-            for card_name in sequence:
-                visited.add(card_name)
+            for card in self.current_hand:
+                if card not in visited:
+                    path = []
+                    dfs(card, path, is_run=True)
+                    if len(path) >= 3:  # Valid sequences
+                        sequences.append(path)
+                    path = []
+                    dfs(card, path, is_run=False)
+                    if len(path) >= 3:  # Valid sets
+                        sets.append(path)
 
-    def is_valid_sequence(self, card1: Card, card2: Card) -> bool:
-        """
-        Check if two cards can form a valid sequence (e.g., consecutive numbers of the same suit).
-        """
-        return card1.card_suit == card2.card_suit and abs(card1.card_number - card2.card_number) == 1
+            return sequences, sets
+        except Exception as e:
+            raise e
 
-    def decide_card_to_discard(self) -> str:
-        """
-        The AI decides which card to discard.
-        For simplicity, it discards the first card in the sequence (this can be more complex).
-        """
-        if self.get_hand()[4].get_number_of_cards() > 0:
-            card_name = self.get_hand()[4].get_cards()[0].card_name
-            return card_name
-        return None
+    def get_points(self):
+        try:
+            self.build_graph()
 
-    def has_won(self) -> bool:
-        """
-        Check if the AI has won the game by having at least one valid sequence.
-        """
-        valid_sequences = sum(1 for sequence in self.get_hand() if isinstance(sequence, Sequence) and sequence.get_sequence_status() == Status.PURE_SEQUENCE)
-        return valid_sequences >= 1  # Modify based on the actual game rules
+            sequences, sets = self.evaluate_hand()
+            matched_cards = set(card for seq in sequences for card in seq)
+            matched_cards.update(set(card for s in sets for card in s))
+            unmatched_cards = [
+                card for card in self.current_hand if card not in matched_cards
+            ]
 
-    def get_card_from_wastepile(self, pile: WastePile) -> bool:
-        """
-        AI picks a card from the WastePile if available.
-        """
-        self.card = pile.get_card()
-        if self.card is None:
-            return False
-        self.hand[4].insert_card_into_sequence(self.card)
-        self.check_sequence_status()
-        return True
+            # Calculate points for unmatched cards
+            points = 0
+            for card in unmatched_cards:
+                rank, suit = card.get_rank(), card.suit
+                if rank in ["J", "Q", "K"]:
+                    points += 10
+                elif rank == "A":
+                    points += 1
+                elif rank == "Joker":
+                    points += 0
+                else:
+                    points += rank
+            return points
+        except Exception as e:
+            raise e
 
-    def get_card_from_stockpile(self, pile: StockPile) -> bool:
-        """
-        AI picks a card from the StockPile if available.
-        """
-        self.card = pile.get_card()
-        if self.card is not None:
-            self.hand[4].insert_card_into_sequence(self.card)
-            self.check_sequence_status()
-            return True
-        return False
+    def get_hand(self):
+        return self.current_hand
 
-    def discard_card(self, sequence_no, card_name, pile: WastePile):
-        """
-        AI discards a card from its sequence to the WastePile.
-        """
-        self.card = self.hand[sequence_no].remove_card_from_sequence(card_name)
-        if self.card is not None:
-            pile.insert_card(self.card)
-            return True
-        return False
+    def choose_draw(self, stock_pile, waste_pile):
+        try:
+            if waste_pile.is_empty():  # If waste pile is empty, draw from stock pile
+                return "stock"
 
-    def check_sequence_status(self):
-        """
-        This method can be used to check and update the status of sequences after each move.
-        You can mark sequences as valid, invalid, or incomplete here.
-        """
-        for sequence in self.get_hand():
-            if isinstance(sequence, Sequence):
-                sequence.update_status()  # Example of checking if the sequence is valid after a move
+            top_waste_card = (
+                waste_pile.get_top_card()
+            )  # Get the top card of the waste pile
+            # Check if the waste pile is not empty and evaluate the hand with the waste card
+            temp_hand = self.current_hand + [top_waste_card]
+            self.build_graph()
+            sequences, sets = self.evaluate_hand()
+            if sequences or sets:
+                return "waste"
 
-    def get_hand(self) -> List[Sequence]:
-        """
-        Returns the current hand, which is a list of Sequence objects.
-        Each Sequence contains a list of Card objects.
-        """
-        return self.hand
+            return "stock"
+        except Exception as e:
+            raise e
+
+    def choose_discard(self):
+        try:
+            card_scores = {}
+            for card in self.current_hand:
+                temp_hand = [c for c in self.current_hand if c != card]
+                self.current_hand = temp_hand
+                self.build_graph()
+                sequences, sets = self.evaluate_hand()
+                score = len(sequences) + len(sets)
+                card_scores[card] = score
+                self.current_hand.append(card)
+
+            # Find the card with the lowest score
+            discard_card = min(card_scores, key=card_scores.get)
+            self.current_hand.remove(discard_card)
+            return discard_card
+        except Exception as e:
+            raise e
+
+    def play(self, stock_pile, waste_pile):
+        try:
+            print(len(self.current_hand))
+            # Build the graph for the current hand
+            self.build_graph()
+
+            # Draw a card from
+            draw_choice = self.choose_draw(stock_pile, waste_pile)
+            if draw_choice == "waste" and waste_pile:
+                drawn_card = waste_pile.get_card()
+            else:
+                drawn_card = stock_pile.get_card()
+            self.current_hand.append(drawn_card)
+
+            # Evaluate the updated hand
+            self.build_graph()
+            sequences, sets = self.evaluate_hand()
+
+            # Discard the least useful card
+            discard_card = self.choose_discard()
+            print(f"{self.name} discards: {discard_card.card_name}")
+            waste_pile.insert_card(discard_card)
+        except Exception as e:
+            raise e
+    
+    def get_player_id(self):
+        return self.player_id

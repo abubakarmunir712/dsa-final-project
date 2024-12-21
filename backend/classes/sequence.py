@@ -16,59 +16,62 @@ class Sequence:
 
     # Check the status of the sequence
     def check_status(self, first_life, second_life):
-        # If the sequence is empty
-        if len(self.__cards) == 0:
-            self.__sequence_status == None
-            return
+        try:
+            # If the sequence is empty
+            if len(self.__cards) == 0:
+                self.__sequence_status == None
+                return
 
-        # If the sequence has less than 3 cards
-        if len(self.__cards) < 3:
-            self.__sequence_status = Status.INVALID
-            return
-
-        # Sort cards according to their rank
-        self._cards = bubble_sort(self.__cards)
-
-        # Get all jokers (both printed and wild jokers)
-        self.wild_jokers = [
-            index
-            for index, card in enumerate(self.__cards)
-            if (card.is_joker() and card.get_rank != 0)
-        ]
-        self.printed_jokers = [
-            index for index, card in enumerate(self.__cards) if card.get_rank() == 0
-        ]
-
-        self.jokers = self.get_jokers()
-        if not first_life and not second_life:
-            if self.is_pure_sequence():
-                self.__sequence_status = Status.FIRST_LIFE
-            elif self.is_impure_sequence():
-                self.__sequence_status = Status.FIRST_LIFE_REQUIRED
-            elif self.is_set():
-                self.__sequence_status = Status.SECOND_LIFE_REQUIRED
-            else:
+            # If the sequence has less than 3 cards
+            if len(self.__cards) < 3:
                 self.__sequence_status = Status.INVALID
+                return
 
-        elif first_life and not second_life:
-            if self.is_pure_sequence():
-                self.__sequence_status = Status.SECOND_LIFE
-            elif self.is_impure_sequence():
-                self.__sequence_status = Status.SECOND_LIFE
-            elif self.is_set():
-                self.__sequence_status = Status.SECOND_LIFE_REQUIRED
-            else:
-                self.__sequence_status = Status.INVALID
-        elif first_life and second_life:
-            if self.is_pure_sequence():
-                self.__sequence_status = Status.PURE_SEQUENCE
-            elif self.is_impure_sequence():
-                self.__sequence_status = Status.IMPURE_SEQUENCE
-            elif self.is_set():
-                self.__sequence_status = Status.SET
-            else:
-                self.__sequence_status = Status.INVALID
-        return self.__sequence_status
+            # Sort cards according to their rank
+            self._cards = bubble_sort(self.__cards)
+
+            # Get all jokers (both printed and wild jokers)
+            self.wild_jokers = [
+                index
+                for index, card in enumerate(self.__cards)
+                if (card.is_joker() and card.get_rank != 0)
+            ]
+            self.printed_jokers = [
+                index for index, card in enumerate(self.__cards) if card.get_rank() == 0
+            ]
+
+            self.jokers = self.get_jokers()
+            if not first_life and not second_life:
+                if self.is_pure_sequence():
+                    self.__sequence_status = Status.FIRST_LIFE
+                elif self.is_impure_sequence():
+                    self.__sequence_status = Status.FIRST_LIFE_REQUIRED
+                elif self.is_set():
+                    self.__sequence_status = Status.SECOND_LIFE_REQUIRED
+                else:
+                    self.__sequence_status = Status.INVALID
+
+            elif first_life and not second_life:
+                if self.is_pure_sequence():
+                    self.__sequence_status = Status.SECOND_LIFE
+                elif self.is_impure_sequence():
+                    self.__sequence_status = Status.SECOND_LIFE
+                elif self.is_set():
+                    self.__sequence_status = Status.SECOND_LIFE_REQUIRED
+                else:
+                    self.__sequence_status = Status.INVALID
+            elif first_life and second_life:
+                if self.is_pure_sequence():
+                    self.__sequence_status = Status.PURE_SEQUENCE
+                elif self.is_impure_sequence():
+                    self.__sequence_status = Status.IMPURE_SEQUENCE
+                elif self.is_set():
+                    self.__sequence_status = Status.SET
+                else:
+                    self.__sequence_status = Status.INVALID
+            return self.__sequence_status
+        except Exception as e:
+            raise e
 
     # Check if a sequence is pure sequence
     def is_pure_sequence(self) -> bool:
@@ -195,6 +198,8 @@ class Sequence:
             or self.__sequence_status == Status.SECOND_LIFE
             or self.__sequence_status == Status.SET
             or self.__sequence_status == None
+            or self.__sequence_status == Status.IMPURE_SEQUENCE
+            or self.__sequence_status == Status.PURE_SEQUENCE
         ):
             return 0
         else:

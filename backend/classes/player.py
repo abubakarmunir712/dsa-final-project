@@ -28,6 +28,7 @@ class Player:
         return self.hand
 
     def get_points(self):
+        self.calulate_points()
         if self.points > 80:
             return 80
         return self.points
@@ -105,80 +106,106 @@ class Player:
                         self.second_life_index = i
 
     def move_card(self, sequence_number_1, sequence_number_2, card_name) -> bool:
-        # Sequence no 1 represent seq from where card is being removed
-        # Sequence no 2 represent seq from where card is being added
-        if (
-            sequence_number_1 < 0
-            or sequence_number_1 > 4
-            or sequence_number_2 < 0
-            or sequence_number_2 > 4
-        ):
-            return False
-        card = self.hand[sequence_number_1].remove_card_from_sequence(card_name)
-        if card is not None:
-            self.hand[sequence_number_2].insert_card_into_sequence(card)
-            self.check_sequence_status()
-            self.calulate_points()
-            return True
-        return False
-
-    # Make a group of cards
-    def group_cards(self, cards_list) -> bool:
-        # Format of card_list = list of tuples in this format (sequence_number, "card_name")
-        self.cards_list = []
-        for card in cards_list:
-            if card[0] < 5 and card[0] >= 0:
-                card = self.hand[card[0]].remove_card_from_sequence(card[1])
-                if card is not None:
-                    self.cards_list.append(card)
-                    self.check_sequence_status()
-                    self.calulate_points()
-            else:
+        try:
+            # Sequence no 1 represent seq from where card is being removed
+            # Sequence no 2 represent seq from where card is being added
+            if (
+                sequence_number_1 < 0
+                or sequence_number_1 > 4
+                or sequence_number_2 < 0
+                or sequence_number_2 > 4
+            ):
                 return False
-
-        # Insert cards into first empty sequence (if any)
-        for i in range(5):
-            if self.hand[i].get_number_of_cards() == 0:
-                self.hand[i] = Sequence(
-                    self.cards_list, self.has_first_life, self.has_second_life
-                )
+            card = self.hand[sequence_number_1].remove_card_from_sequence(card_name)
+            if card is not None:
+                self.hand[sequence_number_2].insert_card_into_sequence(card)
                 self.check_sequence_status()
                 self.calulate_points()
                 return True
+            return False
+        except Exception as e:
+            raise e
 
-        # If no sequence is empty append it to last sequence
-        for card in self.cards_list:
-            self.hand[4].insert_card_into_sequence(card)
-        self.check_sequence_status()
-        self.calulate_points()
-        return True
+    # Make a group of cards
+    def group_cards(self, cards_list) -> bool:
+        try:
+            # Format of card_list = list of tuples in this format (sequence_number, "card_name")
+            self.cards_list = []
+            for card in cards_list:
+                if card[0] < 5 and card[0] >= 0:
+                    card = self.hand[card[0]].remove_card_from_sequence(card[1])
+                    if card is not None:
+                        self.cards_list.append(card)
+                        self.check_sequence_status()
+                        self.calulate_points()
+                    else:
+                        return "Card not found!"
+                else:
+                    return False
+
+            # Insert cards into first empty sequence (if any)
+            for i in range(5):
+                if self.hand[i].get_number_of_cards() == 0:
+                    self.hand[i] = Sequence(
+                        self.cards_list, self.has_first_life, self.has_second_life
+                    )
+                    self.check_sequence_status()
+                    self.calulate_points()
+                    return True
+
+            # If no sequence is empty append it to last sequence
+            for card in self.cards_list:
+                self.hand[4].insert_card_into_sequence(card)
+            self.check_sequence_status()
+            self.calulate_points()
+            return True
+        except Exception as e:
+            raise e
 
     # Getting card from waste pile
     def get_card_from_wastepile(self, pile: WastePile) -> bool:
-        card = pile.get_card()
-        if card is None:
-            return False
-        self.hand[4].insert_card_into_sequence(card)
-        self.check_sequence_status()
-        self.calulate_points()
-        return True
-
-    # Get card from stock pile
-    def get_card_from_stockpile(self, pile: StockPile) -> bool:
-        card = pile.get_card()
-        if card is not None:
+        try:
+            card = pile.get_card()
+            if card is None:
+                return False
             self.hand[4].insert_card_into_sequence(card)
             self.check_sequence_status()
             self.calulate_points()
             return True
-        return False
+        except Exception as e:
+            raise e
+
+    # Get card from stock pile
+    def get_card_from_stockpile(self, pile: StockPile) -> bool:
+        try:
+            card = pile.get_card()
+            if card is not None:
+                self.hand[4].insert_card_into_sequence(card)
+                self.check_sequence_status()
+                self.calulate_points()
+                return True
+            return False
+
+        except Exception as e:
+            raise e
 
     # Move card to waste pile
     def discard_card(self, sequence_no, card_name, pile: WastePile):
-        card = self.hand[sequence_no].remove_card_from_sequence(card_name)
-        if card is not None:
-            pile.insert_card(card)
-            self.check_sequence_status()
-            self.calulate_points()
-            return True
-        return False
+        try:
+            card = self.hand[sequence_no].remove_card_from_sequence(card_name)
+            if card is not None:
+                pile.insert_card(card)
+                self.check_sequence_status()
+                self.calulate_points()
+                return True
+            return False
+        except Exception as e:
+            raise e
+
+    def get_cards(self):
+        cards = []
+        for i in range(5):
+            if self.hand[i].get_cards() is not None:
+                for card in self.hand[i].get_cards():
+                    cards.append(card)
+        return cards
