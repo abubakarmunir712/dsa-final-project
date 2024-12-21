@@ -164,7 +164,7 @@ Here is the folder structuring for the project:
       ├── utility
       │   └── utilities.py
       └── main.py
-      
+
       Frontend
       └── console
           └── main.py
@@ -173,7 +173,7 @@ Here is the folder structuring for the project:
 
 1. Clone the repository.
 
-   ` bash` git clone https://github.com/abubakarmunir712/dsa-final-project`
+   ` bash` git clone https://github.com/abubakarmunir712/dsa-final-project
 
 2. Install the necessary dependencies:
    - python 3.x or higher
@@ -195,9 +195,11 @@ Here are some challenges we faced while working on this project:
 
 # Contributions:
 
-    @aabr2612
-    @abubakarmunir712
-    @ABUTAYYAB
+Here are the contributors for this project:
+
+- [aabr2612](https://github.com/aabr2612)
+- [abubakarmunir712](https://github.com/abubakarmunir712)
+- [ABUTAYYAB](https://github.com/ABUTAYYAB)
 
 # Conclusion:
 
