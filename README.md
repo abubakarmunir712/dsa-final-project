@@ -190,15 +190,38 @@ Here is the folder structuring for the project:
 
 # How to Run the Project
 
-1. Clone the repository.
+1.  Clone the repository:
 
-   ` bash` git clone https://github.com/abubakarmunir712/dsa-final-project
+         git clone https://github.com/abubakarmunir712/dsa-final-project
 
-2. Install the necessary dependencies:
-   - python 3.x or higher
-   - flask
-3. Start the backend server:
-4. Open the frontend and play.
+2.  Install the necessary dependencies:
+
+    - python 3.x or higher
+    - flask
+
+    You can install Flask using pip:
+
+          pip install flask
+
+3.  Start the backend server:
+
+    - Navigate to the backend folder:
+
+          cd backend
+
+    - Run the `main.py` file to start the server:
+
+          python main.py
+
+4.  Open the frontend and play:
+
+    - Navigate to the frontend folder:
+
+          cd frontend/console
+
+    - Run the `main.py` file:
+
+          python main.py
 
 # Challenges and Solutions
 
