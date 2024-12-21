@@ -140,34 +140,34 @@ Contains enumeration files used throughout the game to define various statuses a
 
 Here is the folder structuring for the project:
 
-Backend
-├── bot
-│ └── bot.py # AI player logic and behavior
-├── classes
-│ ├── card.py # Card class defining properties and methods for each card
-│ ├── deck.py # Deck class to create and shuffle the deck
-│ ├── player.py # Player class for managing player actions
-│ ├── sequence.py # Sequence class for managing card sequences
-│ ├── stockpile.py # StockPile class to handle the stockpile
-│ └── wastepile.py # WastePile class to manage discarded cards
-├── data_structures
-│ ├── hashmap.py # HashMap implementation for efficient lookups
-│ ├── linkedlist.py # LinkedList data structure
-│ ├── queue.py # Queue data structure
-│ └── stack.py # Stack data structure
-├── enums
-│ ├── rank_enum.py # Enum for card ranks
-│ ├── status_enum.py # Enum for sequence and game statuses
-│ └── suit_enum.py # Enum for card suits
-├── game_logic
-│ └── game.py # Main game logic and flow, handles player actions, sequences, etc.
-├── utility
-│ └── utilities.py # Utility functions such as bubble sort, find min/max rank, etc.
-└── main.py # Entry point for starting the game or server
-
-Frontend
-└── console
-└── main.py # Console-based user interface for interacting with the game
+      Backend
+      ├── bot
+      │   └── bot.py
+      ├── classes
+      │   ├── card.py
+      │   ├── deck.py
+      │   ├── player.py
+      │   ├── sequence.py
+      │   ├── stockpile.py
+      │   └── wastepile.py
+      ├── data_structures
+      │   ├── hashmap.py
+      │   ├── linkedlist.py
+      │   ├── queue.py
+      │   └── stack.py
+      ├── enums
+      │   ├── rank_enum.py
+      │   ├── status_enum.py
+      │   └── suit_enum.py
+      ├── game_logic
+      │   └── game.py
+      ├── utility
+      │   └── utilities.py
+      └── main.py
+      
+      Frontend
+      └── console
+          └── main.py
 
 # How to Run the Project
 
