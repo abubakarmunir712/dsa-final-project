@@ -89,10 +89,9 @@ def main():
                 ),
                 "is-my-turn": _is_my_turn,
                 "winner": (
-                    # game.winner_selection()
-                    # if game.winner_selection() is None
-                    # else game.winner_selection().player_id
-                    1
+                    game.winner_selection()
+                    if game.winner_selection() is None
+                    else game.winner_selection().player_id
                 ),
             }
         else:

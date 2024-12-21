@@ -4,7 +4,6 @@ import time
 import requests
 import socket
 import psutil
-import threading
 import ipaddress
 
 ip_list = []
